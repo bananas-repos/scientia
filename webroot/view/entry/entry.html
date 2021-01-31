@@ -1,0 +1,14 @@
+<?php if(!empty($TemplateData['data'])) { ?>
+<p>Created: <?php echo Summoner::ifset($TemplateData['data'],'created'); ?>, Updated: <?php echo Summoner::ifset($TemplateData['data'],'modified'); ?></p>
+<?php } ?>
+<form method="post">
+	<textarea rows="25" placeholder="write here" name="fdata[entry]"><?php echo Summoner::ifset($TemplateData['data'],'body'); ?></textarea>
+	<input type="submit" name="submitForm" value="Save">
+
+</form>
+<p>
+<?php if(!empty($TemplateData['data'])) { ?>
+<a href="<?php echo PATH_WEBROOT; ?>/new">New</a><br />
+<?php } ?>
+<a href="<?php echo PATH_WEBROOT; ?>"><- back</a>
+</p>

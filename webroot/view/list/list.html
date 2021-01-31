@@ -1,0 +1,14 @@
+<?php if(!empty($TemplateData['entries'])) { ?>
+<?php
+	foreach($TemplateData['entries'] as $gk=>$g) {
+		echo $gk;
+?>
+<ul>
+	<?php foreach($g as $e) { ?>
+	<li><a href="<?php echo $e['link']; ?>"><?php echo $e['ident']; ?></a> <?php echo $e['date']; ?> <?php echo htmlspecialchars($e['body'],ENT_HTML5); ?></li>
+	<?php } ?>
+</ul>
+<?php
+	}
+}
+?>
