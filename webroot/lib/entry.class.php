@@ -36,7 +36,7 @@ class Entry {
 	 *
 	 * @param mysqli $db
 	 */
-	public function __construct($db) {
+	public function __construct(mysqli $db) {
 		$this->_DB = $db;
 	}
 
@@ -47,7 +47,7 @@ class Entry {
 	 * @param string $data
 	 * @return mixed
 	 */
-	public function create($data) {
+	public function create(string $data): bool {
 		$ret = false;
 
 		$_words = implode(' ', $this->_words($data));
@@ -78,9 +78,9 @@ class Entry {
 	 * @param string $m Month m
 	 * @param string $d Day d
 	 * @param string $id Id of the entry
-	 * @return array|null
+	 * @return array
 	 */
-	public function load($y, $m, $d, $id) {
+	public function load(string $y, string $m, string $d, string $id): array {
 		$ret = array();
 
 		if(!empty($id) && !empty($y) && !empty($m) && !empty($d)) {
@@ -108,10 +108,10 @@ class Entry {
 	 *
 	 * @param array $data
 	 * @param string $id
-	 * @return mixed
+	 * @return int
 	 */
-	public function update($data,$id) {
-		$ret = false;
+	public function update(array $data, string $id) {
+		$ret = 0;
 
 		if(!empty($data) && !empty($id)) {
 			$_words = implode(' ', $this->_words($data));
@@ -135,12 +135,12 @@ class Entry {
 	/**
 	 * Create unique words from the given data
 	 *
+	 * @param $data string
+	 * @return array
 	 * @todo ignores
 	 *
-	 * @param $data
-	 * @return array
 	 */
-	private function _words($data) {
+	private function _words(string $data): array {
 		preg_match_all('/\w{3,}+/',$data,$matches);
 		return array_unique($matches[0]);
 	}

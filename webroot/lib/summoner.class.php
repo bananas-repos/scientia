@@ -24,24 +24,24 @@
  * A static helper class
  */
 class Summoner {
-    /**
-     * validate the given string with the given type. Optional check the string
-     * length
-     *
-     * @param string $input The string to check
-     * @param string $mode How the string should be checked
-     * @param mixed $limit If int given the string is checked for length
-     *
-     * @return bool
-     *
-     * @see http://de.php.net/manual/en/regexp.reference.unicode.php
-     * http://www.sql-und-xml.de/unicode-database/#pc
-     *
-     * the pattern replaces all that is allowed. the correct result after
-     * the replace should be empty, otherwise are there chars which are not
-     * allowed
-     */
-    static function validate($input,$mode='text',$limit=false) {
+	/**
+	 * validate the given string with the given type. Optional check the string
+	 * length
+	 *
+	 * @param string $input The string to check
+	 * @param string $mode How the string should be checked
+	 * @param mixed $limit If int given the string is checked for length
+	 *
+	 * @return bool
+	 *
+	 * @see http://de.php.net/manual/en/regexp.reference.unicode.php
+	 * http://www.sql-und-xml.de/unicode-database/#pc
+	 *
+	 * the pattern replaces all that is allowed. the correct result after
+	 * the replace should be empty, otherwise are there chars which are not
+	 * allowed
+	 */
+    static function validate(string $input, $mode='text', $limit=false): bool {
         // check if we have input
         $input = trim($input);
 
@@ -119,26 +119,26 @@ class Summoner {
         return $ret;
     }
 
-    /**
-     * check if a string starts with a given string
-     *
-     * @param string $haystack
-     * @param string $needle
-     * @return boolean
-     */
-    static function startsWith($haystack, $needle) {
+	/**
+	 * check if a string starts with a given string
+	 *
+	 * @param string $haystack
+	 * @param string $needle
+	 * @return boolean
+	 */
+    static function startsWith(string $haystack, string $needle): bool {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
     }
 
-    /**
-     * check if a string ends with a given string
-     *
-     * @param string $haystack
-     * @param string $needle
-     * @return boolean
-     */
-    static function endsWith($haystack, $needle) {
+	/**
+	 * check if a string ends with a given string
+	 *
+	 * @param string $haystack
+	 * @param string $needle
+	 * @return boolean
+	 */
+    static function endsWith(string $haystack, string $needle): bool {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
@@ -155,7 +155,7 @@ class Summoner {
 	 * @param int $id
 	 * @return string
 	 */
-    static function b64sl_pack_id($id) {
+    static function b64sl_pack_id(int $id): string {
     	error_log($id);
         $id = intval($id);
         $ida = ($id > 0xFFFFFFFF ? $id >> 32 : 0);	// 32 bit big endian, top
@@ -169,14 +169,14 @@ class Summoner {
         return $id;
     }
 
-    /**
-     * Decode a base64-encoded big-endian integer of up to 64 bits.
-     *
-     * @see https://www.jwz.org/base64-shortlinks/
-     * @param int $id
-     * @return false|int|string|string[]
-     */
-    static function b64sl_unpack_id($id) {
+	/**
+	 * Decode a base64-encoded big-endian integer of up to 64 bits.
+	 *
+	 * @see https://www.jwz.org/base64-shortlinks/
+	 * @param int $id
+	 * @return false|int|string|string[]
+	 */
+    static function b64sl_unpack_id(int $id) {
         $id = str_replace ('-', '+', $id);		// decode URL-unsafe "+" "/"
         $id = str_replace ('_', '/', $id);
         $id = base64_decode ($id);
@@ -193,11 +193,11 @@ class Summoner {
 	 *
 	 * http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
 	 *
-	 * @param $array
-	 * @param $key
+	 * @param $array array
+	 * @param $key string
 	 * @return bool|mixed
 	 */
-	static function ifset($array,$key) {
+	static function ifset(array $array, string $key): bool {
 		return isset($array[$key]) ? $array[$key] : false;
 	}
 
