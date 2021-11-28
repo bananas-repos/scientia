@@ -45,10 +45,10 @@ class Entry {
 	 * Data is not validated anymore
 	 *
 	 * @param string $data
-	 * @return mixed
+	 * @return string
 	 */
-	public function create(string $data): bool {
-		$ret = false;
+	public function create(string $data): string {
+		$ret = '';
 
 		$_words = implode(' ', $this->_words($data));
 		$_ident = Summoner::b64sl_pack_id(rand(111111, 999999));
@@ -106,12 +106,12 @@ class Entry {
 	/**
 	 * Update an entry by given $id and $data
 	 *
-	 * @param array $data
+	 * @param string $data
 	 * @param string $id
-	 * @return int
+	 * @return string
 	 */
-	public function update(array $data, string $id) {
-		$ret = 0;
+	public function update(string $data, string $id): string {
+		$ret = '';
 
 		if(!empty($data) && !empty($id)) {
 			$_words = implode(' ', $this->_words($data));

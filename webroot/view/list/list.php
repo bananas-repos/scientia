@@ -22,36 +22,37 @@ $TemplateData['entries'] = array();
 
 $queryStr = "SELECT `e`.`ident`, `e`.`date`, SUBSTRING(`e`.`body`,1,100) AS body FROM `".DB_PREFIX."_entry` AS e";
 $queryLimit = " LIMIT 100";
-$groupByFormat = $_date->format('Y');
+
+// why?
+// mysql knows the dates and validates them. There is no 2020-02-31
+// the single date infos come from index.php
+$groupByFormat = $_year;
 if(!empty($_requestDateProvided)) {
-	$_intervalStart = false;
-	$_intervalEnd = false;
+	$_intervalStart = '';
+	$_intervalEnd = '';
 
 	if($_requestDateProvided === 'ymd') {
-		$_intervalStart = new DateInterval('P1D');
-		$_intervalEnd = new DateInterval('P2D');
 		$queryLimit = "";
-		$groupByFormat = $_date->format('Y-m-d');
+		$groupByFormat = $_year.'-'.$_month.'-'.$_day;
+		$_intervalStart = $groupByFormat;
+		$_intervalEnd = $groupByFormat;
+
 	}
 	elseif ($_requestDateProvided === 'ym') {
-		$_intervalStart = new DateInterval('P1M');
-		$_intervalEnd = new DateInterval('P2M');
 		$queryLimit = "";
-		$groupByFormat = $_date->format('Y-m');
+		$groupByFormat = $_year.'-'.$_month;
+		$_intervalStart = $groupByFormat.'-01';
+		$_tDate = new DateTime( $_intervalStart );
+		$_monthDays = $_tDate->format( 't' );
+		$_intervalEnd = $groupByFormat.'-'.$_monthDays;
 	}
 	elseif ($_requestDateProvided === 'y') {
-		$_intervalStart = new DateInterval('P1Y');
-		$_intervalEnd = new DateInterval('P2Y');
+		$_intervalStart = $groupByFormat.'-01-01';
+		$_intervalEnd = $groupByFormat.'-12-31';
 	}
 
 	if(!empty($_intervalStart) && !empty($_intervalEnd)) {
-
-		$_date->sub($_intervalStart);
-		$_f = $_date->format("Y-m-d");
-		$_date->add($_intervalEnd);
-		$_e = $_date->format("Y-m-d");
-
-		$queryStr .= " WHERE `date` >= '".$_f."' AND `date` <= '".$_e."'";
+		$queryStr .= " WHERE `date` >= '".$_intervalStart."' AND `date` <= '".$_intervalEnd."'";
 	}
 }
 

@@ -97,6 +97,11 @@ class Summoner {
                 $pattern = '/[\p{L}\p{N}\p{M}\-_\.\p{Zs}]/u';
 			break;
 
+			case 'shortlink':
+				// special char string based on https://www.jwz.org/base64-shortlinks/
+				$pattern = '/[\p{L}\p{N}\-_]/u';
+			break;
+
             case 'text':
             default:
                 $pattern = '/[\p{L}\p{N}\p{P}\p{S}\p{Z}\p{M}\s]/u';
@@ -195,9 +200,9 @@ class Summoner {
 	 *
 	 * @param $array array
 	 * @param $key string
-	 * @return bool|mixed
+	 * @return mixed
 	 */
-	static function ifset(array $array, string $key): bool {
+	static function ifset(array $array, string $key) {
 		return isset($array[$key]) ? $array[$key] : false;
 	}
 

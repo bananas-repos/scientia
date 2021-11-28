@@ -1,3 +1,6 @@
+<p>
+	<a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
+</p>
 <?php if(!empty($TemplateData['entries'])) { ?>
 <?php
 	foreach($TemplateData['entries'] as $gk=>$g) {
@@ -5,7 +8,7 @@
 ?>
 <ul>
 	<?php foreach($g as $e) { ?>
-	<li><a href="<?php echo $e['link']; ?>"><?php echo $e['ident']; ?></a> <?php echo $e['date']; ?> <?php echo htmlspecialchars($e['body'],ENT_HTML5); ?></li>
+	<li><a href="<?php echo PATH_WEBROOT; ?>/<?php echo $e['link']; ?>"><?php echo $e['ident']; ?></a> <?php echo $e['date']; ?> <?php echo htmlspecialchars($e['body'],ENT_HTML5); ?></li>
 	<?php } ?>
 </ul>
 <?php

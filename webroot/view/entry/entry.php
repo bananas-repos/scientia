@@ -21,7 +21,7 @@
 require_once 'lib/entry.class.php';
 $Entry = new Entry($DB);
 
-$TemplateData['data'] = '';
+$TemplateData['data'] = array();
 if(!empty($_id)) {
 	$TemplateData['data'] = $Entry->load($_year,$_month,$_day,$_id);
 }

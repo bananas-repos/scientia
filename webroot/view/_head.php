@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.min.css">
+	<link rel="stylesheet" href="<?php echo PATH_WEBROOT; ?>/view/water.css">
 	<style type=text/css>
 		body {
 			max-width: 90%;

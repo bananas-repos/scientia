@@ -87,7 +87,7 @@ if(isset($_GET['d']) && Summoner::validate($_GET['d'], 'digit')) {
 if(isset($_GET['p']) && Summoner::validate($_GET['p'], 'nospace') && $_GET['p'] == "new") {
 	$_view = 'entry';
 }
-if(isset($_GET['id']) && Summoner::validate($_GET['id'], 'nospace',4)) {
+if(isset($_GET['id']) && Summoner::validate($_GET['id'], 'shortlink',4)) {
 	$_id = trim($_GET['id']);
 	$_view = 'entry';
 }
