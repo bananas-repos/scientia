@@ -92,12 +92,6 @@ if(isset($_GET['id']) && Summoner::validate($_GET['id'], 'shortlink',4)) {
 	$_view = 'entry';
 }
 
-try {
-	$_date = new DateTime("$_year-$_month-$_day");
-} catch (Exception $e) {
-	$_date = new DateTime();
-}
-
 require_once 'view/'.$_view.'/'.$_view.'.php';
 
 # header information
