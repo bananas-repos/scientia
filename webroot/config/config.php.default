@@ -38,3 +38,14 @@
  # username and password for authentication
  define('FRONTEND_USERNAME','user');
  define('FRONTEND_PASSWORD','pass');
+
+# API config
+# this is your installation secret. Could be anything.
+# Think of it as a key. Change it often to avoid any abuse.
+# The description will be used in the log files
+define('UPLOAD_SECRET',
+    array(
+        'PLEASE CHANGE YOUR SECRET' => 'Your description for this secret #1',
+        'PLEASE CHANGE YOUR SECRET' => 'Your description for this secret #2'
+    )
+);
