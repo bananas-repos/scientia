@@ -48,12 +48,28 @@ date_default_timezone_set(TIMEZONE);
 require_once('lib/summoner.class.php');
 
 
+if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER,true));
 ## check if request is valid
 $_create = false;
-if(isset($_POST['asl']) && !empty($_POST['asl'])
-    && isset($_FILES['data']) && !empty($_FILES['data'])
-    && isset(SELFPASTE_UPLOAD_SECRET[$_POST['asl']])) {
-    $_create = true;
+$filteredData = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] === 'application/json; charset=utf-8') {
+	$payload = json_decode(file_get_contents('php://input'), true);
+	if(DEBUG) error_log("[DEBUG] Dump payload ".var_export($payload,true));
+	if(!empty($payload)) {
+		if(isset($payload['asl']) && !empty($payload['asl'])
+			&& isset($payload['data']) && !empty($payload['data'])
+			&& isset(UPLOAD_SECRET[$payload['asl']])
+		) {
+			if(DEBUG) error_log("[DEBUG] Valid payload so far");
+			if(!empty($payload['data'])) {
+				$filteredData = filter_var($payload['data'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				if(!empty($filteredData)) {
+					if(DEBUG) error_log("[DEBUG] Validated payload");
+					$_create = true;
+				}
+			}
+		}
+	}
 }
 
 ## default response
@@ -69,7 +85,8 @@ if($_create === false) {
     header('X-PROVIDED-BY: scientia');
     header($contentType);
     http_response_code($httpResponseCode);
-    echo json_encode($data);
+    echo json_encode($contentBody);
+    exit();
 }
 
 # database object
@@ -82,3 +99,22 @@ $DB->set_charset("utf8mb4");
 $DB->query("SET collation_connection = 'utf8mb4_unicode_ci'");
 $driver = new mysqli_driver();
 $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
+
+require_once 'lib/entry.class.php';
+$Entry = new Entry($DB);
+$do = $Entry->create($filteredData);
+if($do !== false) {
+	$contentBody['message'] = date('/Y/m/d/').$do;
+}
+else {
+	$hash = md5($do.time());
+	error_log("[ERROR] $hash Can not create. ". var_export($do,true));
+	$contentBody['message'] = "Something went wrong. $hash";
+	$contentBody['status'] = 500;
+}
+
+# return
+header('X-PROVIDED-BY: scientia');
+header($contentType);
+http_response_code($httpResponseCode);
+echo json_encode($contentBody);

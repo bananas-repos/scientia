@@ -15,29 +15,29 @@
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
- # set to true if you need debug messages in error log file
- define('DEBUG',true);
- # set to ture if you need query log messages in error log file.
- define('QUERY_DEBUG',true);
+# set to true if you need debug messages in error log file
+define('DEBUG',true);
+# set to ture if you need query log messages in error log file.
+define('QUERY_DEBUG',true);
 
- # timezone settings
- define('TIMEZONE','Europe/Berlin');
+# timezone settings
+define('TIMEZONE','Europe/Berlin');
 
- # path settings
- define('PATH_ABSOLUTE','/absolute/path/scientia/webroot');
- define('PATH_SYSTEMOUT',PATH_ABSOLUTE.'/systemout');
- define('PATH_WEBROOT','/absolute/path');
+# path settings
+define('PATH_ABSOLUTE','/absolute/path/scientia/webroot');
+define('PATH_SYSTEMOUT',PATH_ABSOLUTE.'/systemout');
+define('PATH_WEBROOT','/absolute/path');
 
- # database config
- define('DB_HOST','127.0.0.1');
- define('DB_USERNAME','user');
- define('DB_PASSWORD','test');
- define('DB_NAME','scientia');
- define('DB_PREFIX','sc'); # a _ is added automatically as separation
+# database config
+define('DB_HOST','127.0.0.1');
+define('DB_USERNAME','user');
+define('DB_PASSWORD','test');
+define('DB_NAME','scientia');
+define('DB_PREFIX','sc'); # a _ is added automatically as separation
 
- # username and password for authentication
- define('FRONTEND_USERNAME','user');
- define('FRONTEND_PASSWORD','pass');
+# username and password for authentication
+define('FRONTEND_USERNAME','user');
+define('FRONTEND_PASSWORD','pass');
 
 # API config
 # this is your installation secret. Could be anything.

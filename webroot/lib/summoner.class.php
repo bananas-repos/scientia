@@ -158,7 +158,6 @@ class Summoner {
 	 * @return string
 	 */
     static function b64sl_pack_id(int $id): string {
-    	error_log($id);
         $id = intval($id);
         $ida = ($id > 0xFFFFFFFF ? $id >> 32 : 0);	// 32 bit big endian, top
         $idb = ($id & 0xFFFFFFFF);			// 32 bit big endian, bottom
