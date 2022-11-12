@@ -1,3 +1,7 @@
+<form method="post">
+	<input type="text" name="searchInput" size="50" />
+	<input type="submit" name="submitForm" value="Search">
+</form>
 <p>
 	<a href="<?php echo PATH_WEBROOT; ?>/">Home</a> | <a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
 </p>
@@ -17,5 +21,6 @@
 </ul>
 <?php
 	}
-}
-?>
+} else { ?>
+<p>Nothing here.</p>
+<?php } ?>

@@ -17,8 +17,15 @@
 
 $TemplateData['entries'] = array();
 
-$queryStr = "SELECT `e`.`ident`, `e`.`date`, SUBSTRING(`e`.`body`,1,100) AS body FROM `".DB_PREFIX."_entry` AS e";
+$queryStr = "SELECT e.ident, e.date, e.words, SUBSTRING(e.body,1,100) AS body FROM `".DB_PREFIX."_entry` AS e";
 $queryLimit = " LIMIT 100";
+
+$searchTerm = '';
+if(isset($_POST['submitForm']) && isset($_POST['searchInput'])) {
+	if(Summoner::validate($_POST['searchInput'])) {
+		$searchTerm = trim($_POST['searchInput']);
+	}
+}
 
 // why?
 // mysql knows the dates and validates them. There is no 2020-02-31
@@ -51,10 +58,16 @@ if(!empty($_requestDateProvided)) {
 	}
 
 	if(!empty($_intervalStart) && !empty($_intervalEnd)) {
-		$queryStr .= " WHERE `date` >= '".$_intervalStart."' AND `date` <= '".$_intervalEnd."'";
+		$queryStr .= " WHERE e.date >= '".$_intervalStart."' AND e.date <= '".$_intervalEnd."'";
+		if(!empty($searchTerm)) {
+			$queryStr .= " AND MATCH(e.words) AGAINST('".$DB->real_escape_string($searchTerm)."' IN BOOLEAN MODE)";
+		}
 	}
 } else {
 	$_requestDateProvided = 'Y';
+	if(!empty($searchTerm)) {
+		$queryStr .= " WHERE MATCH(e.words) AGAINST('".$DB->real_escape_string($searchTerm)."' IN BOOLEAN MODE)";
+	}
 }
 
 $queryStr .= " ORDER BY `created` DESC";

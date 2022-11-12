@@ -163,7 +163,7 @@ class Entry {
 	 *
 	 */
 	private function _words(string $data): array {
-		preg_match_all('/\w{3,}+/',$data,$matches);
+		preg_match_all('/\w{3,}+/u',$data,$matches);
 		return array_unique($matches[0]);
 	}
 }
