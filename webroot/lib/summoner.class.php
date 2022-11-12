@@ -38,7 +38,7 @@ class Summoner {
 	 * the replace should be empty, otherwise are there chars which are not
 	 * allowed
 	 */
-    static function validate(string $input, $mode='text', $limit=false): bool {
+    static function validate(string $input, string $mode='text', mixed $limit=false): bool {
         // check if we have input
         $input = trim($input);
 
