@@ -27,7 +27,7 @@ class Summoner {
 	 *
 	 * @param string $input The string to check
 	 * @param string $mode How the string should be checked
-	 * @param mixed $limit If int given the string is checked for length
+	 * @param string $limit If int given the string is checked for length
 	 *
 	 * @return bool
 	 *
@@ -38,7 +38,7 @@ class Summoner {
 	 * the replace should be empty, otherwise are there chars which are not
 	 * allowed
 	 */
-    static function validate(string $input, string $mode='text', mixed $limit=false): bool {
+    static function validate(string $input, string $mode='text', string $limit=''): bool {
         // check if we have input
         $input = trim($input);
 
