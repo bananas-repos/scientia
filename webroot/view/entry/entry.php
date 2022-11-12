@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2021 Johannes Keßler
+ * Copyright 2022 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -21,6 +21,7 @@ $Entry = new Entry($DB);
 $TemplateData['data'] = array();
 if(!empty($_id)) {
 	$TemplateData['data'] = $Entry->load($_year,$_month,$_day,$_id);
+	$TemplateData['data']['breadcrumb'] = array($_year,$_month,$_day);
 }
 
 if(isset($_POST['submitForm']) && isset($_POST['fdata'])) {
@@ -28,7 +29,11 @@ if(isset($_POST['submitForm']) && isset($_POST['fdata'])) {
 	if(isset($fdata['entry']) && Summoner::validate($fdata['entry'])) {
 		$_dataToSave = trim($fdata['entry']);
 
-		if(!empty($_id)) {
+		if(!empty($_id) && isset($_POST['deleteEntry']) && $_POST['deleteEntry'] == "yes") {
+			$do = $Entry->delete($_id);
+			$_r = '/';
+		}
+		elseif(!empty($_id)) {
 			$do = $Entry->update($_dataToSave,$_id);
 			$_r = '/'.$_year.'/'.$_month.'/'.$_day.'/'.$_id;
 		}

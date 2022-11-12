@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2021 Johannes Keßler
+ * Copyright 2022 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -20,7 +20,7 @@ mb_internal_encoding('UTF-8');
 ini_set('error_reporting',-1); // E_ALL & E_STRICT
 
 ## check request
-$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 if(!empty($_urlToParse)) {
 	# see http://de2.php.net/manual/en/regexp.reference.unicode.php
 	if(preg_match('/[\p{C}\p{M}\p{Sc}\p{Sk}\p{So}\p{Zl}\p{Zp}]/u',$_urlToParse) === 1) {
@@ -71,15 +71,15 @@ $TemplateData = array();
 
 if(isset($_GET['y']) && Summoner::validate($_GET['y'], 'digit')) {
 	$_year = trim($_GET['y']);
-	$_requestDateProvided .= 'y';
+	$_requestDateProvided .= 'Y';
 }
 if(isset($_GET['m']) && Summoner::validate($_GET['m'], 'digit')) {
 	$_month = trim($_GET['m']);
-	$_requestDateProvided .= 'm';
+	$_requestDateProvided .= '-m';
 }
 if(isset($_GET['d']) && Summoner::validate($_GET['d'], 'digit')) {
 	$_day = trim($_GET['d']);
-	$_requestDateProvided .= 'd';
+	$_requestDateProvided .= '-d';
 }
 if(isset($_GET['p']) && Summoner::validate($_GET['p'], 'nospace') && $_GET['p'] == "new") {
 	$_view = 'entry';

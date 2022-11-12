@@ -23,34 +23,38 @@ $queryLimit = " LIMIT 100";
 // why?
 // mysql knows the dates and validates them. There is no 2020-02-31
 // the single date infos come from index.php
-$groupByFormat = $_year;
+$_groupByFormat = $_year;
+$breadcrumb = array('Y');
 if(!empty($_requestDateProvided)) {
 	$_intervalStart = '';
 	$_intervalEnd = '';
 
-	if($_requestDateProvided === 'ymd') {
+	if($_requestDateProvided === 'Y-m-d') {
 		$queryLimit = "";
-		$groupByFormat = $_year.'-'.$_month.'-'.$_day;
-		$_intervalStart = $groupByFormat;
-		$_intervalEnd = $groupByFormat;
-
+		$_groupByFormat = $_year.'-'.$_month.'-'.$_day;
+		$_intervalStart = $_groupByFormat;
+		$_intervalEnd = $_groupByFormat;
+		$breadcrumb = array('Y','m','d');
 	}
-	elseif ($_requestDateProvided === 'ym') {
+	elseif ($_requestDateProvided === 'Y-m') {
 		$queryLimit = "";
-		$groupByFormat = $_year.'-'.$_month;
-		$_intervalStart = $groupByFormat.'-01';
+		$_groupByFormat = $_year.'-'.$_month;
+		$_intervalStart = $_groupByFormat.'-01';
 		$_tDate = new DateTime( $_intervalStart );
 		$_monthDays = $_tDate->format( 't' );
-		$_intervalEnd = $groupByFormat.'-'.$_monthDays;
+		$_intervalEnd = $_groupByFormat.'-'.$_monthDays;
+		$breadcrumb = array('Y','m');
 	}
-	elseif ($_requestDateProvided === 'y') {
-		$_intervalStart = $groupByFormat.'-01-01';
-		$_intervalEnd = $groupByFormat.'-12-31';
+	elseif ($_requestDateProvided === 'Y') {
+		$_intervalStart = $_groupByFormat.'-01-01';
+		$_intervalEnd = $_groupByFormat.'-12-31';
 	}
 
 	if(!empty($_intervalStart) && !empty($_intervalEnd)) {
 		$queryStr .= " WHERE `date` >= '".$_intervalStart."' AND `date` <= '".$_intervalEnd."'";
 	}
+} else {
+	$_requestDateProvided = 'Y';
 }
 
 $queryStr .= " ORDER BY `created` DESC";
@@ -62,8 +66,13 @@ try {
 	if($query !== false && $query->num_rows > 0) {
 		while(($result = $query->fetch_assoc()) != false) {
 			$_d = new DateTime($result['date']);
-			$TemplateData['entries'][$_d->format($groupByFormat)][$result['ident']] = $result;
-			$TemplateData['entries'][$_d->format($groupByFormat)][$result['ident']]['link'] = str_replace('-','/',$result['date']).'/'.$result['ident'];
+			$_breadcrumb = array();
+			foreach($breadcrumb as $_b) {
+				$_breadcrumb[] = $_d->format($_b);
+			}
+			$TemplateData['entries'][$_d->format($_requestDateProvided)]['breadcrumb'] = $_breadcrumb;
+			$TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$result['ident']] = $result;
+			$TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$result['ident']]['link'] = str_replace('-','/',$result['date']).'/'.$result['ident'];
 		}
 	}
 }

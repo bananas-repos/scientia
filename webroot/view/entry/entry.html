@@ -4,11 +4,18 @@
 <form method="post">
 	<textarea rows="25" placeholder="write here" name="fdata[entry]"><?php echo Summoner::ifset($TemplateData['data'],'body'); ?></textarea>
 	<input type="submit" name="submitForm" value="Save">
-
+	<input type="checkbox" name="deleteEntry" value="yes" /> <small style="color: indianred">Delete Entry</small>
 </form>
 <p>
-<?php if(!empty($TemplateData['data'])) { ?>
-<a href="<?php echo PATH_WEBROOT; ?>/new">New</a><br />
+<a href="<?php echo PATH_WEBROOT; ?>">Home</a>
+<?php if(!empty($TemplateData['data'])) {
+	echo ' | ';
+	$_link = '';
+	foreach($TemplateData['data']['breadcrumb'] as $be) {
+		$_link .= '/'.$be;
+		echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a> | ';
+	}
+?>
+	<a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
 <?php } ?>
-<a href="<?php echo PATH_WEBROOT; ?>"><- back</a>
 </p>

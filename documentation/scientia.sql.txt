@@ -6,5 +6,6 @@ CREATE TABLE `sc_entry` (
   `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `words` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`ident`) USING BTREE,
-  KEY `date` (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  KEY `date` (`date`),
+  FULLTEXT KEY `words` (`words`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

@@ -1,13 +1,17 @@
 <p>
-	<a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
+	<a href="<?php echo PATH_WEBROOT; ?>/">Home</a> | <a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
 </p>
 <?php if(!empty($TemplateData['entries'])) { ?>
 <?php
-	foreach($TemplateData['entries'] as $gk=>$g) {
-		echo $gk;
+	foreach($TemplateData['entries'] as $k=>$v) {
+		$_link = '';
+		foreach($v['breadcrumb'] as $be) {
+			$_link .= '/'.$be;
+			echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a> ';
+		}
 ?>
 <ul>
-	<?php foreach($g as $e) { ?>
+	<?php foreach($v['e'] as $e) { ?>
 	<li><a href="<?php echo PATH_WEBROOT; ?>/<?php echo $e['link']; ?>"><?php echo $e['ident']; ?></a> <?php echo $e['date']; ?> <?php echo htmlspecialchars($e['body'],ENT_HTML5); ?></li>
 	<?php } ?>
 </ul>

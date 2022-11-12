@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2021 Johannes Keßler
+ * Copyright 2022 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -26,7 +26,7 @@ class Entry {
 	 *
 	 * @var mysqli
 	 */
-	private $_DB;
+	private mysqli $_DB;
 
 	/**
 	 * Entry constructor.
@@ -120,6 +120,31 @@ class Entry {
 			try {
 				$this->_DB->query($queryStr);
 				$ret = $id;
+			}
+			catch(Exception $e) {
+				error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Delete given id from _entry table
+	 *
+	 * @param string $id
+	 * @return bool
+	 */
+	public function delete(string $id): bool {
+		$ret = false;
+
+		if(!empty($id)) {
+			$queryStr = "DELETE FROM `".DB_PREFIX."_entry`
+							WHERE `ident` = '".$this->_DB->real_escape_string($id)."'";
+			if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+			try {
+				$this->_DB->query($queryStr);
+				$ret = true;
 			}
 			catch(Exception $e) {
 				error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
