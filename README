@@ -4,3 +4,8 @@ scientia utilis - useful knowledge
 https://www.bananas-playground.net/projekt/scientia/
 
 A self hosted small knowledge base.
+
+Simple storage of text into the database.
+Browsable by date.
+Searchable with mysql fulltext search.
+Protected by BASIC AUTH, single user only, so far.

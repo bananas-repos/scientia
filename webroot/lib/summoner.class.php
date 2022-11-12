@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2021 Johannes Keßler
+ * Copyright 2022 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
