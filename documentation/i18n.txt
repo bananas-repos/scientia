@@ -1,0 +1,6 @@
+Other languages are supported by the i18n ini files in the lib/i18n folder.
+It uses the two char lang code as a filename.
+
+To add a new translation copy the existing en.ini file and rename it to the new language.
+Edit every value for each key in the file. Get in touch or even make a PR via github to
+get the new language added.

@@ -46,8 +46,12 @@ date_default_timezone_set(TIMEZONE);
 
 # required libs
 require_once('lib/summoner.class.php');
+require_once('lib/i18n.class.php');
 
 Summoner::simpleAuth();
+
+# i18n
+$i18n = new I18n();
 
 # database object
 $DB = false;

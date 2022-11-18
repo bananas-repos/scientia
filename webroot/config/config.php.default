@@ -23,6 +23,9 @@ const QUERY_DEBUG = true;
 # timezone settings
 const TIMEZONE = 'Europe/Berlin';
 
+# language settings
+const FRONTEND_LANGUAGE = 'en';
+
 # path settings
 const PATH_ABSOLUTE = '/home/banana/code/scientia/webroot';
 const PATH_SYSTEMOUT = PATH_ABSOLUTE . '/systemout';

@@ -1,9 +1,9 @@
 <form method="post">
 	<input type="text" name="searchInput" size="50" />
-	<input type="submit" name="submitForm" value="Search">
+	<input type="submit" name="submitForm" value="<?php echo $i18n->('form.button.search'); ?>">
 </form>
 <p>
-	<a href="<?php echo PATH_WEBROOT; ?>/">Home</a> | <a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
+	<a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->('text.home'); ?></a> | <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->('text.new'); ?></a>
 </p>
 <?php if(!empty($TemplateData['entries'])) { ?>
 <?php
@@ -22,5 +22,5 @@
 <?php
 	}
 } else { ?>
-<p>Nothing here.</p>
+<p><?php echo $i18n->('text.noentries'); ?></p>
 <?php } ?>
