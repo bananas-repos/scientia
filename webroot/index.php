@@ -93,6 +93,9 @@ require_once 'view/'.$_view.'/'.$_view.'.php';
 
 # header information
 header('Content-type: text/html; charset=UTF-8');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 if(isset($TemplateData['refresh']) && !empty($TemplateData['refresh'])) {
 	header('Location: '.PATH_WEBROOT.$TemplateData['refresh']);
 	exit();
