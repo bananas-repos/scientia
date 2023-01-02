@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2022 Johannes Keßler
+ * Copyright 2023 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -20,7 +20,7 @@ mb_internal_encoding('UTF-8');
 ini_set('error_reporting',-1); // E_ALL & E_STRICT
 
 ## check request
-$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 if(!empty($_urlToParse)) {
 	# see http://de2.php.net/manual/en/regexp.reference.unicode.php
 	if(preg_match('/[\p{C}\p{M}\p{Sc}\p{Sk}\p{So}\p{Zl}\p{Zp}]/u',$_urlToParse) === 1) {
@@ -61,12 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] === 'appli
 			&& isset(UPLOAD_SECRET[$payload['asl']])
 		) {
 			if(DEBUG) error_log("[DEBUG] Valid payload so far");
-			if(!empty($payload['data'])) {
-				$filteredData = filter_var($payload['data'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-				if(!empty($filteredData)) {
-					if(DEBUG) error_log("[DEBUG] Validated payload");
-					$_create = true;
-				}
+			$filteredData = filter_var($payload['data'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if(!empty($filteredData)) {
+				if(DEBUG) error_log("[DEBUG] Validated payload");
+				$_create = true;
 			}
 		}
 	}
@@ -89,9 +87,6 @@ if($_create === false) {
     exit();
 }
 
-# database object
-$DB = false;
-
 ## DB connection
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
@@ -103,7 +98,7 @@ $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
 require_once 'lib/entry.class.php';
 $Entry = new Entry($DB);
 $do = $Entry->create($filteredData);
-if($do !== false) {
+if(!empty($do)) {
 	$contentBody['message'] = date('/Y/m/d/').$do;
 }
 else {
@@ -118,3 +113,4 @@ header('X-PROVIDED-BY: scientia');
 header($contentType);
 http_response_code($httpResponseCode);
 echo json_encode($contentBody);
+$DB->close();

@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2022 Johannes Keßler
+ * Copyright 2023 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -174,10 +174,10 @@ class Summoner {
 	 * Decode a base64-encoded big-endian integer of up to 64 bits.
 	 *
 	 * @see https://www.jwz.org/base64-shortlinks/
-	 * @param int $id
-	 * @return false|int|string|string[]
+	 * @param string $id
+	 * @return int
 	 */
-    static function b64sl_unpack_id(int $id) {
+    static function b64sl_unpack_id(string $id): int {
         $id = str_replace ('-', '+', $id);		// decode URL-unsafe "+" "/"
         $id = str_replace ('_', '/', $id);
         $id = base64_decode ($id);
@@ -198,7 +198,7 @@ class Summoner {
 	 * @param $key string
 	 * @return mixed
 	 */
-	static function ifset(array $array, string $key) {
+	static function ifset(array $array, string $key): mixed {
 		return isset($array[$key]) ? $array[$key] : false;
 	}
 
@@ -206,7 +206,7 @@ class Summoner {
 	 * a very simple HTTP_AUTH authentication.
 	 * Needs FRONTEND_USERNAME and FRONTEND_PASSWORD defined
 	 */
-	static function simpleAuth() {
+	static function simpleAuth(): void {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
 			|| $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
 		) {

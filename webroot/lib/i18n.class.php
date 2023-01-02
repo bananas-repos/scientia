@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2022 Johannes Keßler
+ * Copyright 2023 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -19,12 +19,12 @@ class I18n {
 	/**
 	 * @var string The lang code
 	 */
-	private $_defaultLangToUse = 'en';
+	private string $_defaultLangToUse = 'en';
 
 	/**
 	 * @var array The loaded lang information from the file
 	 */
-	private $_langData = array();
+	private array $_langData = array();
 
 	/**
 	 * i18n constructor.

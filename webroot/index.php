@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2022 Johannes Keßler
+ * Copyright 2023 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -53,9 +53,6 @@ Summoner::simpleAuth();
 # i18n
 $i18n = new I18n();
 
-# database object
-$DB = false;
-
 ## DB connection
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
@@ -69,7 +66,7 @@ $_view = 'list';
 $_year = date('Y');
 $_month = date('m');
 $_day = date('d');
-$_id = false;
+$_id = '';
 $_requestDateProvided = '';
 $TemplateData = array();
 
