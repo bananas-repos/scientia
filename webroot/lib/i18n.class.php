@@ -30,9 +30,9 @@ class I18n {
 	 * i18n constructor.
 	 */
 	public function __construct() {
-		$_langFile = ABSOLUTE_PATH.'/lib/i18n/'.$this->_defaultLangToUse.'.ini';
+		$_langFile = PATH_ABSOLUTE.'/lib/i18n/'.$this->_defaultLangToUse.'.ini';
 		if(defined('FRONTEND_LANGUAGE')) {
-			$_langFile = ABSOLUTE_PATH.'/lib/i18n/'.FRONTEND_LANGUAGE.'.ini';
+			$_langFile = PATH_ABSOLUTE.'/lib/i18n/'.FRONTEND_LANGUAGE.'.ini';
 			if(file_exists($_langFile)) {
 				$_langData = parse_ini_file($_langFile);
 				if($_langData !== false) {
