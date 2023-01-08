@@ -1,4 +1,4 @@
-This is a client written in go to be used with scientia
+This is a terminal tui client written in go to be used with scientia
 https://://www.bananas-playground.net/projekt/scientia
 
 !WARNING!
@@ -6,4 +6,4 @@ This is a very simple, with limited experience written, go program.
 Use at own risk and feel free to improve.
 
 Howto build:
-Nothing special, just go build -o scientia 
+Nothing special, just go build -o scientia-tui
