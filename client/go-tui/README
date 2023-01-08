@@ -7,3 +7,8 @@ Use at own risk and feel free to improve.
 
 Howto build:
 Nothing special, just go build -o scientia-tui
+
+Uses:
+https://github.com/charmbracelet/bubbletea
+https://github.com/charmbracelet/bubbles
+https://github.com/charmbracelet/lipgloss
