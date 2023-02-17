@@ -1,18 +1,18 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
+	"gopkg.in/yaml.v2"
+	"io"
+	"io/ioutil"
 	"log"
 	"math/rand"
-	"os"
-	"flag"
-	"gopkg.in/yaml.v2"
 	"net/http"
-	"io/ioutil"
-	"bytes"
-	"mime/multipart"
-	"encoding/json"
+	"os"
 )
 
 /**
@@ -33,6 +33,7 @@ import (
 
 const website = "https://www.bananas-playground.net/projekt/scientia"
 const version = "1.0"
+
 // used for non-existing default config
 const letters = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
 
@@ -43,18 +44,25 @@ var optsDebug bool
 
 // config
 var cfg Config
+
 // config file struct
 type Config struct {
 	Endpoint struct {
-		Host string `yaml:"host"`
+		Host   string `yaml:"host"`
 		Secret string `yaml:"secret"`
 	} `yaml:"endpoint"`
+}
+
+// post json struct
+type PayloadJson struct {
+	Asl  string `json:"asl"`
+	Data string `json:"data"`
 }
 
 // response json struct
 type Response struct {
 	Message string `json:"message"`
-	Status int `json:"status"`
+	Status  int    `json:"status"`
 }
 
 /**
@@ -78,7 +86,9 @@ func main() {
 
 	// get the payload
 	payload := getInput()
-	if optsDebug { log.Println(payload) }
+	if optsDebug {
+		log.Println(payload)
+	}
 
 	// do the upload and get the response
 	responseString := uploadCall(payload)
@@ -90,15 +100,12 @@ func main() {
 	fmt.Printf("Message: %s\n", response.Message)
 }
 
-
-
-
 /**
  * Check and display error with additional message
  */
 func errorCheck(e error, msg string) {
 	if e != nil {
-		log.Fatal(msg,e)
+		log.Fatal(msg, " ; Errrormsg: ", e)
 	}
 }
 
@@ -120,7 +127,9 @@ func randStringBytes(n int) string {
 func loadConfig() {
 	homeDir, err := os.UserHomeDir()
 	errorCheck(err, "No $HOME directory available?")
-	if optsVerbose { log.Printf("Your $HOME: %s \n", homeDir) }
+	if optsVerbose {
+		log.Printf("Your $HOME: %s \n", homeDir)
+	}
 
 	var configFile = homeDir + "/.scientia.yaml"
 
@@ -134,23 +143,24 @@ func loadConfig() {
 			errorCheck(err, "Can not create config file!")
 			defer newConfig.Close()
 
-
 			_, err = fmt.Fprintf(newConfig, "# scientia go client config file.\n")
 			errorCheck(err, "Can not write to new config file")
 			fmt.Fprintf(newConfig, "# See %s for more details.\n", website)
 			fmt.Fprintf(newConfig, "# Version: %s\n", version)
 			fmt.Fprintf(newConfig, "endpoint:\n")
-			fmt.Fprintf(newConfig, "  host: http://your-scientia-endpoi.nt\n")
+			fmt.Fprintf(newConfig, "  host: http://your-scientia-endpoi.nt/api.php\n")
 			fmt.Fprintf(newConfig, "  secret: %s\n", randStringBytes(50))
 
-			log.Fatalf("New default config file created: - %s - Edit and launch again!",configFile)
+			log.Fatalf("New default config file created: - %s - Edit and launch again!", configFile)
 		}
 	}
 
 	existingConfigFile, err := os.Open(configFile)
-	errorCheck(err, "Can not open config file")
+	errorCheck(err, "Can not open config file. Did you create one with -create-config-file?")
 	defer existingConfigFile.Close()
-	if optsVerbose { log.Printf("Reading config file: %s \n", configFile) }
+	if optsVerbose {
+		log.Printf("Reading config file: %s \n", configFile)
+	}
 
 	var decoder = yaml.NewDecoder(existingConfigFile)
 	err = decoder.Decode(&cfg)
@@ -173,46 +183,43 @@ func loadConfig() {
  */
 func uploadCall(payload string) string {
 
-	if optsVerbose { log.Println("Starting to upload data") }
-	if optsDebug { log.Println(payload) }
+	if optsVerbose {
+		log.Println("Starting to upload data")
+	}
+	if optsDebug {
+		log.Println(payload)
+	}
 	if len(payload) == 0 {
 		log.Fatal("Nothing provided to upload")
 	}
 
-	// Buffer to store our request body as bytes
-	var requestBody bytes.Buffer
+	payloadStruct := PayloadJson{
+		Asl:  cfg.Endpoint.Secret,
+		Data: payload,
+	}
 
-	// Create a multipart writer
-	multiPartWriter := multipart.NewWriter(&requestBody)
+	jsonData, err := json.Marshal(payloadStruct)
+	errorCheck(err, "Can not create json payload")
 
-	// file field
-	fileWriter, err := multiPartWriter.CreateFormFile("pasty", "pastyfile")
-	errorCheck(err, "Can not create form file field")
-	fileWriter.Write([]byte(payload))
-
-	dlField, err := multiPartWriter.CreateFormField("dl")
-	errorCheck(err, "Can not create form dl field")
-	dlField.Write([]byte(cfg.Endpoint.Secret))
-
-	multiPartWriter.Close()
-
-	req, err := http.NewRequest(http.MethodPost, cfg.Endpoint.Host, &requestBody)
+	req, err := http.NewRequest(http.MethodPost, cfg.Endpoint.Host, bytes.NewBuffer(jsonData))
 	errorCheck(err, "Can not create http request")
 	// We need to set the content type from the writer, it includes necessary boundary as well
-	req.Header.Set("Content-Type", multiPartWriter.FormDataContentType())
-	req.Header.Set("User-Agent", "scientiaAgent/1.0");
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("User-Agent", "scientiaAgent/1.0")
 
 	// Do the request
 	client := &http.Client{}
 	response, err := client.Do(req)
 	errorCheck(err, "POST request failed")
 
-	responseBody, err := ioutil.ReadAll(response.Body)
+	responseBody, err := io.ReadAll(response.Body)
 	errorCheck(err, "Can not read response body")
 
-	if optsVerbose { log.Println("Request done") }
+	if optsVerbose {
+		log.Println("Request done")
+	}
 	if optsDebug {
-		log.Printf("Response status code: %d\n",response.StatusCode)
+		log.Printf("Response status code: %d\n", response.StatusCode)
 		log.Printf("Response headers: %#v\n", response.Header)
 		log.Println(string(responseBody))
 	}
@@ -226,12 +233,16 @@ func uploadCall(payload string) string {
  * return the read data as string
  */
 func getInput() string {
-	if optsVerbose { log.Println("Getting input") }
+	if optsVerbose {
+		log.Println("Getting input")
+	}
 
 	var inputString string
 
 	if filename := flag.Arg(0); filename != "" {
-		if optsVerbose { log.Println("Read from file argument") }
+		if optsVerbose {
+			log.Println("Read from file argument")
+		}
 
 		bytes, err := os.ReadFile(filename)
 		errorCheck(err, "Error opening file")
@@ -239,7 +250,9 @@ func getInput() string {
 	} else {
 		stat, _ := os.Stdin.Stat()
 		if (stat.Mode() & os.ModeCharDevice) == 0 {
-			if optsVerbose { log.Println("data is being piped") }
+			if optsVerbose {
+				log.Println("data is being piped")
+			}
 
 			bytes, _ := ioutil.ReadAll(os.Stdin)
 			inputString = string(bytes)

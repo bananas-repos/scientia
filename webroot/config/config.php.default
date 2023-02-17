@@ -27,9 +27,12 @@ const TIMEZONE = 'Europe/Berlin';
 const FRONTEND_LANGUAGE = 'en';
 
 # path settings
-const PATH_ABSOLUTE = '/home/banana/code/scientia/webroot';
+const PATH_ABSOLUTE = '/path/to/scientia/webroot';
 const PATH_SYSTEMOUT = PATH_ABSOLUTE . '/systemout';
 const PATH_WEBROOT = '/code/scientia/webroot';
+
+# Installation Domain. Webrootpath will be added automatically
+const INSTALL_URL = 'http://www.example.tld';
 
 # database config
 const DB_HOST = '127.0.0.1';

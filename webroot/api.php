@@ -49,10 +49,12 @@ require_once('lib/summoner.class.php');
 
 
 if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER,true));
+if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER['REQUEST_METHOD'],true));
+if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER['CONTENT_TYPE'],true));
 ## check if request is valid
 $_create = false;
 $filteredData = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] === 'application/json; charset=utf-8') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] === 'application/json; charset=UTF-8') {
 	$payload = json_decode(file_get_contents('php://input'), true);
 	if(DEBUG) error_log("[DEBUG] Dump payload ".var_export($payload,true));
 	if(!empty($payload)) {
@@ -99,7 +101,7 @@ require_once 'lib/entry.class.php';
 $Entry = new Entry($DB);
 $do = $Entry->create($filteredData);
 if(!empty($do)) {
-	$contentBody['message'] = date('/Y/m/d/').$do;
+	$contentBody['message'] = INSTALL_URL . PATH_WEBROOT . date('/Y/m/d/').$do;
 }
 else {
 	$hash = md5($do.time());

@@ -1,3 +1,4 @@
 Work in progress.
 
-Currently there is go client in the works.
+A client needs to create its secret. This needs to be added to the server. After that a client is allowed
+to add contents.
