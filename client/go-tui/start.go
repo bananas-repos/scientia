@@ -37,11 +37,11 @@ var (
 	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
 )
 
-
 // item stuff
 type item struct {
 	title, desc string
 }
+
 func (i item) Title() string       { return i.title }
 func (i item) Description() string { return i.desc }
 func (i item) FilterValue() string { return i.title }
@@ -76,7 +76,7 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 }
 
 func initStart() list.Model {
-	items := []list.Item {
+	items := []list.Item{
 		item{title: "Create", desc: ITEM_CREATE_VALUE},
 		item{title: "List", desc: ITEM_LIST_VALUE},
 		item{title: "Update", desc: ITEM_UPDATE_VALUE},
@@ -101,31 +101,33 @@ func startUpdate(msg tea.Msg, m mainModel) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.start.SetWidth(msg.Width)
+		//m.viewport.Width = msg.Width
+		//m.viewport.Height = msg.Height
 		return m, nil
 
 	case tea.KeyMsg:
 		switch msg.Type {
-			// esc does close?
-			case tea.KeyEsc:
-				return m, nil
-			case tea.KeyCtrlC:
+		// esc does close?
+		case tea.KeyEsc:
+			return m, nil
+		case tea.KeyCtrlC:
+			m.quitting = true
+			return m, tea.Quit
+
+		case tea.KeyEnter:
+			i, ok := m.start.SelectedItem().(item)
+			if ok {
+				m.choice = i.Description()
+			}
+			return m, nil
+
+		case tea.KeyRunes:
+			switch string(msg.Runes) {
+			case "q":
 				m.quitting = true
 				return m, tea.Quit
-
-			case tea.KeyEnter:
-				i, ok := m.start.SelectedItem().(item)
-				if ok {
-					m.choice = i.Description()
-				}
-				return m, nil
-
-			case tea.KeyRunes:
-				switch string(msg.Runes) {
-					case "q":
-						m.quitting = true
-						return m, tea.Quit
-					}
 			}
+		}
 	}
 
 	var cmd tea.Cmd

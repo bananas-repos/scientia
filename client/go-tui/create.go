@@ -36,7 +36,7 @@ func initCreate() textarea.Model {
 	ta := textarea.New()
 	ta.Placeholder = "Once upon a time..."
 	ta.SetHeight(10)
-	ta.SetWidth(50)
+	ta.SetWidth(80)
 	ta.Focus()
 
 	return ta
@@ -44,7 +44,8 @@ func initCreate() textarea.Model {
 
 func createView(m mainModel) string {
 	return lipgloss.JoinVertical(lipgloss.Left,
-		headline.Render("Create a new entry"), m.create.View(),
+		headline.Render("Create a new entry"),
+		m.create.View(),
 		infoText.Render("esc*2 to get back and discard. ctrl+s to save."))
 }
 
@@ -55,28 +56,32 @@ func createUpdate(msg tea.Msg, m mainModel) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 
-		case tea.KeyMsg:
-			switch msg.Type {
-				case tea.KeyCtrlC:
-					m.quitting = true
-					return m, tea.Quit
-				case tea.KeyCtrlS:
-					m.choice = ""
-					return m, nil
+	case tea.WindowSizeMsg:
+		m.create.SetWidth(msg.Width)
+		return m, nil
 
-				case tea.KeyEsc:
-					if m.create.Focused() {
-						m.create.Blur()
-					} else if !m.create.Focused() {
-						m.choice = ""
-						return m, nil
-					}
-				default:
-					if !m.create.Focused() {
-						cmd = m.create.Focus()
-						cmds = append(cmds, cmd)
-					}
-				}
+	case tea.KeyMsg:
+		switch msg.Type {
+		case tea.KeyCtrlC:
+			m.quitting = true
+			return m, tea.Quit
+		case tea.KeyCtrlS:
+			m.choice = ""
+			return m, nil
+
+		case tea.KeyEsc:
+			if m.create.Focused() {
+				m.create.Blur()
+			} else if !m.create.Focused() {
+				m.choice = ""
+				return m, nil
+			}
+		default:
+			if !m.create.Focused() {
+				cmd = m.create.Focus()
+				cmds = append(cmds, cmd)
+			}
+		}
 	}
 
 	m.create, cmd = m.create.Update(msg)

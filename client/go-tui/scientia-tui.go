@@ -19,7 +19,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textarea"
+	"github.com/charmbracelet/bubbles/viewport"
 	"github.com/charmbracelet/lipgloss"
 	"os"
 
@@ -30,7 +32,7 @@ import (
 // the unique identifiers for each action of the initial list of actions
 const (
 	ITEM_CREATE_VALUE = "create"
-	ITEM_LIST_VALUE = "list"
+	ITEM_LIST_VALUE   = "list"
 	ITEM_UPDATE_VALUE = "update"
 )
 
@@ -42,10 +44,12 @@ var (
 // mainModel Holds all the important stuff
 // Needs to be extended if a new action is added
 type mainModel struct {
-	start list.Model
-	create textarea.Model
-	choice string
+	start    list.Model
+	create   textarea.Model
+	list     table.Model
+	choice   string
 	quitting bool
+	viewport viewport.Model
 }
 
 func (m mainModel) Init() tea.Cmd {
@@ -55,12 +59,12 @@ func (m mainModel) Init() tea.Cmd {
 // Update The main Update method. Decides the correct action update method
 func (m mainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.choice {
-		case ITEM_UPDATE_VALUE:
-			//return quitTextStyle.Render("Update it is")
-		case ITEM_LIST_VALUE:
-			//return quitTextStyle.Render("List it is")
-		case ITEM_CREATE_VALUE:
-			return createUpdate(msg, m)
+	case ITEM_UPDATE_VALUE:
+		//return quitTextStyle.Render("Update it is")
+	case ITEM_LIST_VALUE:
+		return listUpdate(msg, m)
+	case ITEM_CREATE_VALUE:
+		return createUpdate(msg, m)
 	}
 	return startUpdate(msg, m)
 }
@@ -72,22 +76,22 @@ func (m mainModel) View() string {
 	}
 
 	switch m.choice {
-		case ITEM_UPDATE_VALUE:
-			return quitTextStyle.Render("Update it is")
-		case ITEM_LIST_VALUE:
-			return quitTextStyle.Render("List it is")
-		case ITEM_CREATE_VALUE:
-			return createView(m)
+	case ITEM_UPDATE_VALUE:
+		return quitTextStyle.Render("Update it is")
+	case ITEM_LIST_VALUE:
+		return listView(m)
+	case ITEM_CREATE_VALUE:
+		return createView(m)
 	}
 
 	return startView(m)
 }
 
 func main() {
-	m := mainModel{start: initStart(), create: initCreate()}
-	p := tea.NewProgram(m)
+	m := mainModel{start: initStart(), create: initCreate(), list: initList()}
+	p := tea.NewProgram(m, tea.WithAltScreen())
 
-	if err := p.Start(); err != nil {
+	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
