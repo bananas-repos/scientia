@@ -3,7 +3,7 @@
 	+ PHP 8.1 stuff
 	+ Search
 	+ Updated clients. A cli and tui client written in Go.
-
+	+ API fixes
 
 1.0 Lykos - 2022-11-12
 	+ Initial release

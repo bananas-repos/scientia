@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
@@ -18,7 +17,7 @@ import (
 /**
  * scientia
  *
- * Copyright 2022 Johannes Keßler
+ * Copyright 2023 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -254,7 +253,7 @@ func getInput() string {
 				log.Println("data is being piped")
 			}
 
-			bytes, _ := ioutil.ReadAll(os.Stdin)
+			bytes, _ := io.ReadAll(os.Stdin)
 			inputString = string(bytes)
 		}
 	}

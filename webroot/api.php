@@ -49,8 +49,6 @@ require_once('lib/summoner.class.php');
 
 
 if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER,true));
-if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER['REQUEST_METHOD'],true));
-if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER['CONTENT_TYPE'],true));
 ## check if request is valid
 $_create = false;
 $filteredData = '';
