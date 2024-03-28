@@ -6,12 +6,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 /**
@@ -30,7 +31,7 @@ import (
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
-const website = "https://www.bananas-playground.net/projekt/scientia"
+const website = "https://www.bananas-playground.net/projekt/scientia/"
 const version = "1.0"
 
 // used for non-existing default config
@@ -68,6 +69,10 @@ type Response struct {
  * Main
  */
 func main() {
+
+	// https://cli.urfave.org/v2/examples/arguments/
+	// https://github.com/dnote/dnote
+	//https://github.com/spf13/cobra/blob/main/site/content/user_guide.md
 
 	// parse commandline parameters
 	flag.BoolVar(&optsVerbose, "verbose", false, "Produce verbose output")
