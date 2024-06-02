@@ -1,15 +1,18 @@
+<p><a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a> | <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a></p>
 <p>
-    <a href="<?php echo PATH_WEBROOT; ?>"><?php echo $i18n->t('text.home'); ?></a>
-    <?php if(!empty($TemplateData['data'])) {
-    echo ' | ';
+<?php if(!empty($TemplateData['data'])) {
     $_link = '';
+    $crumbs = count($TemplateData['data']['breadcrumb']);
+    $i = 0;
     foreach($TemplateData['data']['breadcrumb'] as $be) {
         $_link .= '/'.$be;
-        echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a> | ';
+        echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a>';
+        if(++$i !== $crumbs) {
+            echo ' | ';
+        }
     }
     ?>
-    <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a>
-    <?php } ?>
+<?php } ?>
 </p>
 <?php if(!empty($TemplateData['data'])) { ?>
 <p>Created: <?php echo $TemplateData['data']['created'] ?? ''; ?>, Updated: <?php echo $TemplateData['data']['modified'] ?? ''; ?></p>

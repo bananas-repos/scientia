@@ -3,23 +3,27 @@
     <input type="submit" name="submitForm" value="<?php echo $i18n->t('form.button.search'); ?>">
 </form>
 <?php if(!empty($TemplateData['entries'])) { ?>
-<p>
-    <a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a> |
+<p><a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a> | <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a></p>
 <?php
     foreach($TemplateData['entries'] as $k=>$v) {
+        echo '<p>';
         $_link = '';
+        $crumbs = count($v['breadcrumb']);
+        $i = 0;
         foreach($v['breadcrumb'] as $be) {
             $_link .= '/'.$be;
-            echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a> | ';
+            echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a>';
+            if(++$i !== $crumbs) {
+                echo ' | ';
+            }
         }
+        echo '</p>';
 ?>
-    <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a>
-<p>
-<ul>
-    <?php foreach($v['e'] as $e) { ?>
-    <li><a href="<?php echo PATH_WEBROOT; ?>/<?php echo $e['link']; ?>"><?php echo $e['ident']; ?></a> <?php echo $e['date']; ?> <?php echo htmlspecialchars($e['body'],ENT_HTML5); ?></li>
-    <?php } ?>
-</ul>
+        <ul>
+            <?php foreach($v['e'] as $e) { ?>
+            <li><a href="<?php echo PATH_WEBROOT; ?>/<?php echo $e['link']; ?>"><?php echo $e['ident']; ?></a> <?php echo $e['date']; ?> <?php echo htmlspecialchars($e['body'],ENT_HTML5); ?></li>
+            <?php } ?>
+        </ul>
 <?php
     }
 } else { ?>
