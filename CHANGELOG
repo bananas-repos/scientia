@@ -2,7 +2,7 @@
 	+ i18n. See upgrade-from-1.0.txt for more details.
 	+ PHP 8.1 stuff
 	+ Search
-	+ Updated clients. A cli and tui client written in Go.
+	+ Updated clients. A cli client written in Go.
 	+ API fixes
 
 1.0 Lykos - 2022-11-12

@@ -1,4 +1,0 @@
-Work in progress.
-
-A client needs to create its secret. This needs to be added to the server. After that a client is allowed
-to add contents.
