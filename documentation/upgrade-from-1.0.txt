@@ -1,6 +1,0 @@
-New config for i18n. Open config.php and add the following:
-
-# language settings
-const FRONTEND_LANGUAGE = 'en';
-
-currently only en (default) and de are available.

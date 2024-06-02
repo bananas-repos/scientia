@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 Johannes Keßler
+ * Copyright 2023 - 2024 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -21,23 +21,23 @@
  * A static helper class
  */
 class Summoner {
-	/**
-	 * validate the given string with the given type. Optional check the string
-	 * length
-	 *
-	 * @param string $input The string to check
-	 * @param string $mode How the string should be checked
-	 * @param string $limit If int given the string is checked for length
-	 *
-	 * @return bool
-	 *
-	 * @see http://de.php.net/manual/en/regexp.reference.unicode.php
-	 * http://www.sql-und-xml.de/unicode-database/#pc
-	 *
-	 * the pattern replaces all that is allowed. the correct result after
-	 * the replace should be empty, otherwise are there chars which are not
-	 * allowed
-	 */
+    /**
+     * validate the given string with the given type. Optional check the string
+     * length
+     *
+     * @param string $input The string to check
+     * @param string $mode How the string should be checked
+     * @param string $limit If int given the string is checked for length
+     *
+     * @return bool
+     *
+     * @see http://de.php.net/manual/en/regexp.reference.unicode.php
+     * http://www.sql-und-xml.de/unicode-database/#pc
+     *
+     * the pattern replaces all that is allowed. the correct result after
+     * the replace should be empty, otherwise are there chars which are not
+     * allowed
+     */
     static function validate(string $input, string $mode='text', string $limit=''): bool {
         // check if we have input
         $input = trim($input);
@@ -54,7 +54,7 @@ class Summoner {
                 else {
                     return false;
                 }
-			break;
+            break;
 
             case 'url':
                 if(filter_var($input,FILTER_VALIDATE_URL) === $input) {
@@ -63,41 +63,41 @@ class Summoner {
                 else {
                     return false;
                 }
-			break;
+            break;
 
             case 'nospace':
                 // text without any whitespace and special chars
                 $pattern = '/[\p{L}\p{N}]/u';
-			break;
+            break;
 
             case 'nospaceP':
                 // text without any whitespace and special chars
                 // but with Punctuation other
                 # http://www.sql-und-xml.de/unicode-database/po.html
                 $pattern = '/[\p{L}\p{N}\p{Po}\-]/u';
-			break;
+            break;
 
             case 'digit':
                 // only numbers and digit
                 // warning with negative numbers...
                 $pattern = '/[\p{N}\-]/';
-			break;
+            break;
 
             case 'pageTitle':
                 // text with whitespace and without special chars
                 // but with Punctuation
                 $pattern = '/[\p{L}\p{N}\p{Po}\p{Z}\s-]/u';
-			break;
+            break;
 
             # strange. the \p{M} is needed.. don't know why..
             case 'filename':
                 $pattern = '/[\p{L}\p{N}\p{M}\-_\.\p{Zs}]/u';
-			break;
+            break;
 
-			case 'shortlink':
-				// special char string based on https://www.jwz.org/base64-shortlinks/
-				$pattern = '/[\p{L}\p{N}\-_]/u';
-			break;
+            case 'shortlink':
+                // special char string based on https://www.jwz.org/base64-shortlinks/
+                $pattern = '/[\p{L}\p{N}\-_]/u';
+            break;
 
             case 'text':
             default:
@@ -121,25 +121,25 @@ class Summoner {
         return $ret;
     }
 
-	/**
-	 * check if a string starts with a given string
-	 *
-	 * @param string $haystack
-	 * @param string $needle
-	 * @return boolean
-	 */
+    /**
+     * check if a string starts with a given string
+     *
+     * @param string $haystack
+     * @param string $needle
+     * @return boolean
+     */
     static function startsWith(string $haystack, string $needle): bool {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
     }
 
-	/**
-	 * check if a string ends with a given string
-	 *
-	 * @param string $haystack
-	 * @param string $needle
-	 * @return boolean
-	 */
+    /**
+     * check if a string ends with a given string
+     *
+     * @param string $haystack
+     * @param string $needle
+     * @return boolean
+     */
     static function endsWith(string $haystack, string $needle): bool {
         $length = strlen($needle);
         if ($length == 0) {
@@ -150,13 +150,13 @@ class Summoner {
     }
 
 
-	/**
-	 * create a short string based on a integer
-	 *
-	 * @see https://www.jwz.org/base64-shortlinks/
-	 * @param int $id
-	 * @return string
-	 */
+    /**
+     * create a short string based on a integer
+     *
+     * @see https://www.jwz.org/base64-shortlinks/
+     * @param int $id
+     * @return string
+     */
     static function b64sl_pack_id(int $id): string {
         $id = intval($id);
         $ida = ($id > 0xFFFFFFFF ? $id >> 32 : 0);	// 32 bit big endian, top
@@ -170,13 +170,13 @@ class Summoner {
         return $id;
     }
 
-	/**
-	 * Decode a base64-encoded big-endian integer of up to 64 bits.
-	 *
-	 * @see https://www.jwz.org/base64-shortlinks/
-	 * @param string $id
-	 * @return int
-	 */
+    /**
+     * Decode a base64-encoded big-endian integer of up to 64 bits.
+     *
+     * @see https://www.jwz.org/base64-shortlinks/
+     * @param string $id
+     * @return int
+     */
     static function b64sl_unpack_id(string $id): int {
         $id = str_replace ('-', '+', $id);		// decode URL-unsafe "+" "/"
         $id = str_replace ('_', '/', $id);
@@ -187,33 +187,18 @@ class Summoner {
         return $id;
     }
 
-	/**
-	 * simulate the Null coalescing operator in php5
-	 *
-	 * this only works with arrays and checking if the key is there and echo/return it.
-	 *
-	 * http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
-	 *
-	 * @param $array array
-	 * @param $key string
-	 * @return mixed
-	 */
-	static function ifset(array $array, string $key): mixed {
-		return isset($array[$key]) ? $array[$key] : false;
-	}
-
-	/**
-	 * a very simple HTTP_AUTH authentication.
-	 * Needs FRONTEND_USERNAME and FRONTEND_PASSWORD defined
-	 */
-	static function simpleAuth(): void {
-		if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
-			|| $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
-		) {
-			header('WWW-Authenticate: Basic realm="Protected area"');
-			header('HTTP/1.0 401 Unauthorized');
-			echo 'No Access.';
-			exit;
-		}
-	}
+    /**
+     * a very simple HTTP_AUTH authentication.
+     * Needs FRONTEND_USERNAME and FRONTEND_PASSWORD defined
+     */
+    static function simpleAuth(): void {
+        if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
+            || $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
+        ) {
+            header('WWW-Authenticate: Basic realm="Protected area"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'No Access.';
+            exit;
+        }
+    }
 }
