@@ -7,23 +7,46 @@ import (
 
 	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
-
 	Helper "scientia/lib"
 )
 
-var configInitCmd = &cobra.Command {
-	Use: "init",
+/**
+ * scientia
+ *
+ * Copyright 2023 - 2024 Johannes Keßler
+ *
+ * https://www.bananas-playground.net/projekt/scientia/
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE
+ *
+ * You should have received a copy of the
+ * COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+ * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
+ */
+
+func init() {
+	configCmd.AddCommand(configInitCmd)
+	configCmd.AddCommand(configReadCmd)
+}
+
+// The Config file struct
+type Config struct {
+	Endpoint struct {
+		Host   string `yaml:"host"`
+		Secret string `yaml:"secret"`
+	} `yaml:"endpoint"`
+}
+
+var configInitCmd = &cobra.Command{
+	Use:   "init",
 	Short: "Initialize config",
-	Long: `Read, edit and initialize scientia configuration`,
+	Long:  `Read, edit and initialize scientia configuration`,
 	Run: func(cmd *cobra.Command, args []string) {
 		initConfig()
 	},
 }
-
-func init() {
-	configCmd.AddCommand(configInitCmd)
-}
-
 
 func initConfig() {
 	configPath := configdir.LocalConfig("scientia")
@@ -43,6 +66,7 @@ func initConfig() {
 		Helper.ErrorCheck(err, "Can not create config file!")
 		defer newConfig.Close()
 
+		// yaml package can not write comments yet, so creating it manually
 		_, err = fmt.Fprintf(newConfig, "# scientia go client config file.\n")
 		Helper.ErrorCheck(err, "Can not write to new config file")
 		fmt.Fprintf(newConfig, "# See %s for more details.\n", Helper.Website)
@@ -53,6 +77,19 @@ func initConfig() {
 
 	} else {
 		fmt.Printf("Config file exists.: %s \n", configFile)
-		fmt.Println("User read to display or edit to modify the config file.")
+		fmt.Println("Use 'read' to display or 'edit' to modify the config file.")
 	}
+}
+
+var configReadCmd = &cobra.Command{
+	Use:   "read",
+	Short: "Read config file",
+	Long:  "Read the config file and print it to stdout",
+	Run: func(cmd *cobra.Command, args []string) {
+		readConfig()
+	},
+}
+
+func readConfig() {
+
 }

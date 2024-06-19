@@ -14,7 +14,7 @@ var FlagVerbose bool
 var FlagDebug bool
 
 // The rootCmd
-var rootCmd = &cobra.Command {
+var rootCmd = &cobra.Command{
 	Use:   "scientia",
 	Short: "scientia client",
 	Long: `cognizance, insight, knowledge.
@@ -31,6 +31,7 @@ More information: https://www.bananas-playground.net/projekt/scientia/`,
 }
 
 func init() {
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	// add global flags
 	rootCmd.PersistentFlags().BoolVarP(&FlagVerbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&FlagDebug, "debug", "d", false, "debug output")
