@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
+	"os"
 )
 
 var configCmd = &cobra.Command {

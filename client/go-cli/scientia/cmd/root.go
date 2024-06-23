@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 // FlagVerbose is a global flag
@@ -24,6 +24,9 @@ type ConfigStruct struct {
 // The ScientiaConfig used globally
 var ScientiaConfig ConfigStruct
 
+var ScientiaConfigPath = configdir.LocalConfig("scientia")
+var ScientiaConfigFile = ScientiaConfigPath + "/.scientia.yaml"
+
 // The rootCmd
 var rootCmd = &cobra.Command{
 	Use:   "scientia",
@@ -32,7 +35,6 @@ var rootCmd = &cobra.Command{
 A client to scientia.
 More information: https://www.bananas-playground.net/projekt/scientia/`,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// display help if no arguments are given
 		if len(args) == 0 {
 			cmd.Help()

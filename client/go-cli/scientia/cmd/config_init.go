@@ -4,13 +4,13 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"os"
-
-	Helper "scientia/lib"
-
 	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
+	"log"
+	"os"
+	"os/exec"
+	Helper "scientia/lib"
 )
 
 /**
@@ -29,12 +29,11 @@ import (
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
-var configPath = configdir.LocalConfig("scientia")
-var configFile = configPath + "/.scientia.yaml"
 
 func init() {
 	configCmd.AddCommand(configInitCmd)
 	configCmd.AddCommand(configReadCmd)
+	configCmd.AddCommand(configEditCmd)
 }
 
 // INIT config file
@@ -50,18 +49,18 @@ var configInitCmd = &cobra.Command {
 
 // initConfig which creates the default config file
 func initConfig() {
-	err := configdir.MakePath(configPath) // Ensure it exists.
+	err := configdir.MakePath(ScientiaConfigPath) // Ensure it exists.
 	Helper.ErrorCheck(err, "No $HOME/.config/scientia directory available?")
 
 	if FlagDebug {
-		fmt.Printf("DEBUG Local user config path: %s\n", configPath)
-		fmt.Printf("DEBUG Local user config file: %s\n", configFile)
+		fmt.Printf("DEBUG Local user config path: %s\n", ScientiaConfigPath)
+		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigPath)
 	}
 
-	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
-		fmt.Printf("Creating new default config file: %s \n", configFile)
+	if _, err := os.Stat(ScientiaConfigFile); errors.Is(err, os.ErrNotExist) {
+		fmt.Printf("Creating new default config file: %s \n", ScientiaConfigFile)
 
-		newConfig, err := os.Create(configFile)
+		newConfig, err := os.Create(ScientiaConfigFile)
 		Helper.ErrorCheck(err, "Can not create config file!")
 		defer newConfig.Close()
 
@@ -73,8 +72,11 @@ func initConfig() {
 		fmt.Fprintf(newConfig, "endpoint:\n")
 		fmt.Fprintf(newConfig, "  host: http://your-scientia-endpoi.nt/api.php\n")
 		fmt.Fprintf(newConfig, "  secret: %s\n", Helper.RandStringBytes(50))
+
+		fmt.Println("Created a new default config file. Please use the edit command to update it with your settings.")
+
 	} else {
-		fmt.Printf("Config file exists.: %s \n", configFile)
+		fmt.Printf("Config file exists.: %s \n", ScientiaConfigFile)
 		fmt.Println("Use 'read' to display or 'edit' to modify the config file.")
 	}
 }
@@ -93,16 +95,16 @@ var configReadCmd = &cobra.Command {
 // readConfig does read the existing config file and prints it contents and validates the yaml.
 func readConfig() {
 	if FlagDebug {
-		fmt.Printf("DEBUG Local user config path: %s\n", configPath)
-		fmt.Printf("DEBUG Local user config file: %s\n", configFile)
+		fmt.Printf("DEBUG Local user config path: %s\n", ScientiaConfigPath)
+		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigFile)
 	}
 
-	existingConfigFile, err := os.Open(configFile)
+	existingConfigFile, err := os.Open(ScientiaConfigFile)
 	Helper.ErrorCheck(err, "Can not open config file. Did you create one with 'config init'?")
 	defer existingConfigFile.Close()
 
 	if FlagVerbose {
-		fmt.Printf("Reading config file: %s \n", configFile)
+		fmt.Printf("Reading config file: %s \n", ScientiaConfigFile)
 	}
 
 	// make sure it can be parsed and thus it is valid
@@ -122,4 +124,48 @@ func readConfig() {
 			break
 		}
 	}
+}
+
+// EDIT config file
+
+var configEditCmd = &cobra.Command {
+	Use:   "edit",
+	Short: "Edit config file",
+	Long:  "Edit the config file with $VISUAL > $EDITOR",
+	Run: func(cmd *cobra.Command, args []string) {
+		editConfig()
+	},
+}
+
+func editConfig() {
+	// default editor
+	var editor = "vim"
+
+	if e := os.Getenv("VISUAL"); e != "" {
+		editor = e
+	} else if e := os.Getenv("EDITOR"); e != "" {
+		editor = e
+	}
+
+	if FlagDebug {
+		fmt.Printf("DEBUG Local user config path: %s\n", ScientiaConfigPath)
+		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigFile)
+		fmt.Printf("DEBUG Using editor: %s\n", editor)
+	}
+
+	if _, err := os.Stat(ScientiaConfigFile); errors.Is(err, os.ErrNotExist) {
+		log.Fatal("Config file missing.");
+	}
+
+	cmd := exec.Command(editor, ScientiaConfigFile)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Start()
+	Helper.ErrorCheck(err, "Can not open config file")
+
+	fmt.Println("Waiting for command to finish...")
+	err = cmd.Wait()
+	Helper.ErrorCheck(err, "Command finished with error")
+	fmt.Println("Done.")
 }
