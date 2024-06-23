@@ -13,6 +13,17 @@ var FlagVerbose bool
 // FlagDebug is a global flag
 var FlagDebug bool
 
+// ConfigStruct file struct
+type ConfigStruct struct {
+	Endpoint struct {
+		Host   string `yaml:"host"`
+		Secret string `yaml:"secret"`
+	} `yaml:"endpoint"`
+}
+
+// The ScientiaConfig used globally
+var ScientiaConfig ConfigStruct
+
 // The rootCmd
 var rootCmd = &cobra.Command{
 	Use:   "scientia",

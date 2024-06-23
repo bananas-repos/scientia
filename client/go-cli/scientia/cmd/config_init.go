@@ -1,13 +1,16 @@
 package cmd
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"os"
 
+	Helper "scientia/lib"
+
 	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
-	Helper "scientia/lib"
+	"gopkg.in/yaml.v3"
 )
 
 /**
@@ -26,20 +29,17 @@ import (
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
+var configPath = configdir.LocalConfig("scientia")
+var configFile = configPath + "/.scientia.yaml"
+
 func init() {
 	configCmd.AddCommand(configInitCmd)
 	configCmd.AddCommand(configReadCmd)
 }
 
-// The Config file struct
-type Config struct {
-	Endpoint struct {
-		Host   string `yaml:"host"`
-		Secret string `yaml:"secret"`
-	} `yaml:"endpoint"`
-}
+// INIT config file
 
-var configInitCmd = &cobra.Command{
+var configInitCmd = &cobra.Command {
 	Use:   "init",
 	Short: "Initialize config",
 	Long:  `Read, edit and initialize scientia configuration`,
@@ -48,15 +48,14 @@ var configInitCmd = &cobra.Command{
 	},
 }
 
+// initConfig which creates the default config file
 func initConfig() {
-	configPath := configdir.LocalConfig("scientia")
 	err := configdir.MakePath(configPath) // Ensure it exists.
 	Helper.ErrorCheck(err, "No $HOME/.config/scientia directory available?")
-	var configFile = configPath + "/.scientia.yaml"
 
 	if FlagDebug {
-		fmt.Printf("Local user config path: %s\n", configPath)
-		fmt.Printf("Local user config file: %s\n", configFile)
+		fmt.Printf("DEBUG Local user config path: %s\n", configPath)
+		fmt.Printf("DEBUG Local user config file: %s\n", configFile)
 	}
 
 	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
@@ -74,14 +73,15 @@ func initConfig() {
 		fmt.Fprintf(newConfig, "endpoint:\n")
 		fmt.Fprintf(newConfig, "  host: http://your-scientia-endpoi.nt/api.php\n")
 		fmt.Fprintf(newConfig, "  secret: %s\n", Helper.RandStringBytes(50))
-
 	} else {
 		fmt.Printf("Config file exists.: %s \n", configFile)
 		fmt.Println("Use 'read' to display or 'edit' to modify the config file.")
 	}
 }
 
-var configReadCmd = &cobra.Command{
+// READ config file
+
+var configReadCmd = &cobra.Command {
 	Use:   "read",
 	Short: "Read config file",
 	Long:  "Read the config file and print it to stdout",
@@ -90,6 +90,36 @@ var configReadCmd = &cobra.Command{
 	},
 }
 
+// readConfig does read the existing config file and prints it contents and validates the yaml.
 func readConfig() {
+	if FlagDebug {
+		fmt.Printf("DEBUG Local user config path: %s\n", configPath)
+		fmt.Printf("DEBUG Local user config file: %s\n", configFile)
+	}
 
+	existingConfigFile, err := os.Open(configFile)
+	Helper.ErrorCheck(err, "Can not open config file. Did you create one with 'config init'?")
+	defer existingConfigFile.Close()
+
+	if FlagVerbose {
+		fmt.Printf("Reading config file: %s \n", configFile)
+	}
+
+	// make sure it can be parsed and thus it is valid
+	var decoder = yaml.NewDecoder(existingConfigFile)
+	err = decoder.Decode(&ScientiaConfig)
+	Helper.ErrorCheck(err, "Can not parse config file")
+
+	// just display the contents
+	existingConfigFile.Seek(0,0) // reset needed
+	configBuffer := bufio.NewReader(existingConfigFile)
+	for {
+		line, _, err := configBuffer.ReadLine()
+		if len(line) > 0 {
+			fmt.Println(string(line))
+		}
+		if err != nil {
+			break
+		}
+	}
 }
