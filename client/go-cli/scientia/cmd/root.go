@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
+	"log"
 	"os"
+	Helper "scientia/lib"
 )
 
 // FlagVerbose is a global flag
@@ -46,13 +49,38 @@ More information: https://www.bananas-playground.net/projekt/scientia/`,
 func init() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	// add global flags
-	rootCmd.PersistentFlags().BoolVarP(&FlagVerbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().BoolVarP(&FlagDebug, "debug", "d", false, "debug output")
+	rootCmd.PersistentFlags().BoolVar(&FlagVerbose, "verbose", false, "verbose output")
+	rootCmd.PersistentFlags().BoolVar(&FlagDebug, "debug", false, "debug output")
+
+	cobra.OnInitialize(loadConfig)
 }
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
+	}
+}
+
+// Read and make sure the basics are in the config
+func loadConfig() {
+	if FlagDebug {
+		fmt.Println("DEBUG using config file: " + ScientiaConfigFile)
+	}
+	existingConfigFile, err := os.Open(ScientiaConfigFile)
+	Helper.ErrorCheck(err, "Can not open config file. Did you create one?")
+	defer existingConfigFile.Close()
+
+	var decoder = yaml.NewDecoder(existingConfigFile)
+	err = decoder.Decode(&ScientiaConfig)
+	Helper.ErrorCheck(err, "Can not decode config file")
+
+	if ScientiaConfig.Endpoint.Host == "" || ScientiaConfig.Endpoint.Secret == "" {
+		log.Fatal("Empty config?")
+	}
+
+	if FlagDebug {
+		fmt.Println("DEBUG Endpoint: " + ScientiaConfig.Endpoint.Host)
+		fmt.Println("DEBUG Secret: " + ScientiaConfig.Endpoint.Secret)
 	}
 }
