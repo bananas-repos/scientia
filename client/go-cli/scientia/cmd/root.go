@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
@@ -19,7 +20,7 @@ var FlagDebug bool
 // ConfigStruct file struct
 type ConfigStruct struct {
 	Endpoint struct {
-		Host   string `yaml:"host"`
+		Url   string `yaml:"url"`
 		Secret string `yaml:"secret"`
 	} `yaml:"endpoint"`
 }
@@ -49,8 +50,8 @@ More information: https://www.bananas-playground.net/projekt/scientia/`,
 func init() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	// add global flags
-	rootCmd.PersistentFlags().BoolVar(&FlagVerbose, "verbose", false, "verbose output")
-	rootCmd.PersistentFlags().BoolVar(&FlagDebug, "debug", false, "debug output")
+	rootCmd.PersistentFlags().BoolVar(&FlagVerbose, "verbose", false, "Add verbose output")
+	rootCmd.PersistentFlags().BoolVar(&FlagDebug, "debug", false, "Add debug output")
 
 	cobra.OnInitialize(loadConfig)
 }
@@ -67,6 +68,12 @@ func loadConfig() {
 	if FlagDebug {
 		fmt.Println("DEBUG using config file: " + ScientiaConfigFile)
 	}
+
+	if _, err := os.Stat(ScientiaConfigFile); errors.Is(err, os.ErrNotExist) {
+		fmt.Println("Warning: No config file found!")
+		return
+	}
+
 	existingConfigFile, err := os.Open(ScientiaConfigFile)
 	Helper.ErrorCheck(err, "Can not open config file. Did you create one?")
 	defer existingConfigFile.Close()
@@ -75,12 +82,12 @@ func loadConfig() {
 	err = decoder.Decode(&ScientiaConfig)
 	Helper.ErrorCheck(err, "Can not decode config file")
 
-	if ScientiaConfig.Endpoint.Host == "" || ScientiaConfig.Endpoint.Secret == "" {
+	if ScientiaConfig.Endpoint.Url == "" || ScientiaConfig.Endpoint.Secret == "" {
 		log.Fatal("Empty config?")
 	}
 
 	if FlagDebug {
-		fmt.Println("DEBUG Endpoint: " + ScientiaConfig.Endpoint.Host)
+		fmt.Println("DEBUG Endpoint: " + ScientiaConfig.Endpoint.Url)
 		fmt.Println("DEBUG Secret: " + ScientiaConfig.Endpoint.Secret)
 	}
 }

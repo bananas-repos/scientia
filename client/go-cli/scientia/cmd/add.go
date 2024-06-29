@@ -18,7 +18,7 @@ func init() {
 
 var addCmd = &cobra.Command {
 	Use: "add file.ext",
-	Short: "Add a new entry and return the URL.",
+	Short: "Add a new entry and return the URL",
 	Long: "Add a new entry based on a file or piped cat file | scientia add. Returns the url to the new entry.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// check if there is a file or piped content
@@ -42,11 +42,7 @@ var addCmd = &cobra.Command {
 			os.Exit(0)
 		}
 
-		responseString := upload(inputString)
-
-		response := Response{}
-		err := json.Unmarshal([]byte(responseString), &response)
-		Helper.ErrorCheck(err, "Can not parse return json")
+		response := upload(inputString)
 
 		// print the result and link to the pasty
 		fmt.Printf("Status: %d\n", response.Status)
@@ -64,8 +60,8 @@ type Response struct {
 	Status  int    `json:"status"`
 }
 
-// Upload the given data
-func upload(payload string) string {
+// Upload the given data and return a Response struct
+func upload(payload string) Response {
 	if FlagVerbose {
 		fmt.Println("Starting to upload data")
 	}
@@ -84,7 +80,7 @@ func upload(payload string) string {
 	jsonData, err := json.Marshal(payloadStruct)
 	Helper.ErrorCheck(err, "Can not create json payload")
 
-	req, err := http.NewRequest(http.MethodPost, ScientiaConfig.Endpoint.Host, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPost, ScientiaConfig.Endpoint.Url, bytes.NewBuffer(jsonData))
 	Helper.ErrorCheck(err, "Can not create http request")
 	// We need to set the content type from the writer, it includes necessary boundary as well
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
@@ -97,22 +93,25 @@ func upload(payload string) string {
 
 	responseBody, err := io.ReadAll(response.Body)
 	Helper.ErrorCheck(err, "Can not read response body")
+
 	if FlagVerbose {
 		fmt.Println("Request done")
 	}
-
-	var returnVal = ""
-	if response.StatusCode != 200 {
-		returnVal = fmt.Sprintf(`{"Message": "Invalid response status. Use --debug for more information.", "Status": %d}`, response.StatusCode)
-	} else {
-		returnVal = string(responseBody)
-	}
-
 	if FlagDebug {
 		fmt.Printf("DEBUG Response status code: %d\n", response.StatusCode)
 		fmt.Printf("DEBUG Response headers: %#v\n", response.Header)
 		fmt.Println("DEBUG Response body:\n", string(responseBody))
 	}
 
-	return returnVal
+	returnResponse := Response{}
+	if response.StatusCode != 200 {
+		returnResponse = Response {
+			Message: "Invalid response status. Use --debug for more information.",
+			Status: response.StatusCode }
+	} else {
+		err := json.Unmarshal([]byte(responseBody), &returnResponse)
+		Helper.ErrorCheck(err, "Can not parse return json")
+	}
+
+	return returnResponse
 }

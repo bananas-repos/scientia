@@ -1,15 +1,11 @@
 package cmd
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
-	"log"
 	"os"
-	"os/exec"
 	Helper "scientia/lib"
 )
 
@@ -32,8 +28,6 @@ import (
 
 func init() {
 	configCmd.AddCommand(configInitCmd)
-	configCmd.AddCommand(configReadCmd)
-	configCmd.AddCommand(configEditCmd)
 }
 
 // INIT config file
@@ -70,8 +64,8 @@ func initConfig() {
 		fmt.Fprintf(newConfig, "# See %s for more details.\n", Helper.Website)
 		fmt.Fprintf(newConfig, "# Version: %s\n", Helper.Version)
 		fmt.Fprintf(newConfig, "endpoint:\n")
-		fmt.Fprintf(newConfig, "  host: http://your-scientia-endpoi.nt/api.php\n")
-		fmt.Fprintf(newConfig, "  secret: %s\n", Helper.RandStringBytes(50))
+		fmt.Fprintf(newConfig, "  url: \"http://your-scientia-endpoi.nt/api.php\"\n")
+		fmt.Fprintf(newConfig, "  secret: \"%s\"\n", Helper.RandStringBytes(50))
 
 		fmt.Println("Created a new default config file. Please use the edit command to update it with your settings.")
 
@@ -79,93 +73,4 @@ func initConfig() {
 		fmt.Printf("Config file exists.: %s \n", ScientiaConfigFile)
 		fmt.Println("Use 'read' to display or 'edit' to modify the config file.")
 	}
-}
-
-// READ config file
-
-var configReadCmd = &cobra.Command {
-	Use:   "read",
-	Short: "Read config file",
-	Long:  "Read the config file and print it to stdout",
-	Run: func(cmd *cobra.Command, args []string) {
-		readConfig()
-	},
-}
-
-// readConfig does read the existing config file and prints it contents and validates the yaml.
-func readConfig() {
-	if FlagDebug {
-		fmt.Printf("DEBUG Local user config path: %s\n", ScientiaConfigPath)
-		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigFile)
-	}
-
-	existingConfigFile, err := os.Open(ScientiaConfigFile)
-	Helper.ErrorCheck(err, "Can not open config file. Did you create one with 'config init'?")
-	defer existingConfigFile.Close()
-
-	if FlagVerbose {
-		fmt.Printf("Reading config file: %s \n", ScientiaConfigFile)
-	}
-
-	// make sure it can be parsed and thus it is valid
-	var decoder = yaml.NewDecoder(existingConfigFile)
-	err = decoder.Decode(&ScientiaConfig)
-	Helper.ErrorCheck(err, "Can not parse config file")
-
-	// just display the contents
-	existingConfigFile.Seek(0,0) // reset needed
-	configBuffer := bufio.NewReader(existingConfigFile)
-	for {
-		line, _, err := configBuffer.ReadLine()
-		if len(line) > 0 {
-			fmt.Println(string(line))
-		}
-		if err != nil {
-			break
-		}
-	}
-}
-
-// EDIT config file
-
-var configEditCmd = &cobra.Command {
-	Use:   "edit",
-	Short: "Edit config file",
-	Long:  "Edit the config file with $VISUAL > $EDITOR",
-	Run: func(cmd *cobra.Command, args []string) {
-		editConfig()
-	},
-}
-
-func editConfig() {
-	// default editor
-	var editor = "vim"
-
-	if e := os.Getenv("VISUAL"); e != "" {
-		editor = e
-	} else if e := os.Getenv("EDITOR"); e != "" {
-		editor = e
-	}
-
-	if FlagDebug {
-		fmt.Printf("DEBUG Local user config path: %s\n", ScientiaConfigPath)
-		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigFile)
-		fmt.Printf("DEBUG Using editor: %s\n", editor)
-	}
-
-	if _, err := os.Stat(ScientiaConfigFile); errors.Is(err, os.ErrNotExist) {
-		log.Fatal("Config file missing.");
-	}
-
-	cmd := exec.Command(editor, ScientiaConfigFile)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err := cmd.Start()
-	Helper.ErrorCheck(err, "Can not open config file")
-
-	fmt.Println("Waiting for command to finish...")
-	err = cmd.Wait()
-	Helper.ErrorCheck(err, "Command finished with error")
-	fmt.Println("Done.")
 }

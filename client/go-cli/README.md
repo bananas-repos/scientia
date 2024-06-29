@@ -1,9 +1,10 @@
 # scienta go cli client
 
-This is a terminal cli client written in go to be used with scientia
-https://://www.bananas-playground.net/projekt/scientia/
+This is a terminal cli client written in go to be used with scientia.
+[Project website](https://www.bananas-playground.net/projekt/scientia/)
 
-!WARNING!
+## Notice
+
 This is a very simple, with limited experience written, go program.
 Use at own risk and feel free to improve.
 
@@ -11,7 +12,8 @@ Currently only tested on linux.
 
 # Howto build
 
-Nothing special, just use the provided Makefile or directly `go build -o scientia` to use your current os/arch settings.
+Nothing special, just use the provided Makefile or directly `go build -o scientia` 
+to use your current os/arch settings.
 
 Or use the Makefile with just `make` to build the binary. 
 
@@ -24,7 +26,7 @@ Update your server it with the secret, which is randomly created.
 
 ## Create
 
-Read from a file `$ scientia file.txt` or piped `$ cat file.txt | scientia-cli`
+Read from a file `$ scientia add file.txt` or piped `$ cat file.txt | scientia-cli add`
 
 # Commandline arguments
 
@@ -34,13 +36,14 @@ Usage:
   scientia [command]
 
 Available Commands:
+  add         Add a new entry and return the URL
   config      Modify config
   help        Help about any command
 
 Flags:
-  -d, --debug     debug output
+      --debug     Add debug output
   -h, --help      help for scientia
-  -v, --verbose   verbose output
+      --verbose   Add verbose output
 
 Use "scientia [command] --help" for more information about a command.
 ```
