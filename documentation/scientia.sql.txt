@@ -8,4 +8,4 @@ CREATE TABLE `sc_entry` (
   PRIMARY KEY (`ident`) USING BTREE,
   KEY `date` (`date`),
   FULLTEXT KEY `words` (`words`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin

@@ -1,21 +1,24 @@
-<?php if(!empty($TemplateData['data'])) { ?>
-<p>Created: <?php echo Summoner::ifset($TemplateData['data'],'created'); ?>, Updated: <?php echo Summoner::ifset($TemplateData['data'],'modified'); ?></p>
-<?php } ?>
-<form method="post">
-	<textarea rows="25" placeholder="write here" name="fdata[entry]"><?php echo Summoner::ifset($TemplateData['data'],'body'); ?></textarea>
-	<input type="submit" name="submitForm" value="Save">
-	<input type="checkbox" name="deleteEntry" value="yes" /> <small style="color: indianred">Delete Entry</small>
-</form>
+<p><a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a> | <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a></p>
 <p>
-<a href="<?php echo PATH_WEBROOT; ?>">Home</a>
 <?php if(!empty($TemplateData['data'])) {
-	echo ' | ';
-	$_link = '';
-	foreach($TemplateData['data']['breadcrumb'] as $be) {
-		$_link .= '/'.$be;
-		echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a> | ';
-	}
-?>
-	<a href="<?php echo PATH_WEBROOT; ?>/new">New</a>
+    $_link = '';
+    $crumbs = count($TemplateData['data']['breadcrumb']);
+    $i = 0;
+    foreach($TemplateData['data']['breadcrumb'] as $be) {
+        $_link .= '/'.$be;
+        echo '<a href="'.PATH_WEBROOT.$_link.'">'.$be.'</a>';
+        if(++$i !== $crumbs) {
+            echo ' | ';
+        }
+    }
+    ?>
 <?php } ?>
 </p>
+<?php if(!empty($TemplateData['data'])) { ?>
+<p>Created: <?php echo $TemplateData['data']['created'] ?? ''; ?>, Updated: <?php echo $TemplateData['data']['modified'] ?? ''; ?></p>
+<?php } ?>
+<form method="post">
+    <textarea rows="25" placeholder="write here" name="fdata[entry]"><?php echo $TemplateData['data']['body'] ?? ''; ?></textarea>
+    <input type="submit" name="submitForm" value="<?php echo $i18n->t('form.button.save'); ?>">
+    <input type="checkbox" name="deleteEntry" value="yes" /> <small style="color: indianred"><?php echo $i18n->t('form.checkbox.deleteentry'); ?></small>
+</form>

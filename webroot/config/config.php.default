@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2022 Johannes Keßler
+ * Copyright 2022 - 2024 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -23,10 +23,16 @@ const QUERY_DEBUG = true;
 # timezone settings
 const TIMEZONE = 'Europe/Berlin';
 
+# language settings
+const FRONTEND_LANGUAGE = 'en';
+
 # path settings
-const PATH_ABSOLUTE = '/home/banana/code/scientia/webroot';
+const PATH_ABSOLUTE = '/path/to/scientia/webroot';
 const PATH_SYSTEMOUT = PATH_ABSOLUTE . '/systemout';
 const PATH_WEBROOT = '/code/scientia/webroot';
+
+# Installation Domain. Webrootpath will be added automatically
+const INSTALL_URL = 'http://www.example.tld';
 
 # database config
 const DB_HOST = '127.0.0.1';

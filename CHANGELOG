@@ -1,2 +1,10 @@
+1.1 Atlas - 2024-06-29
+	+ Config change: i18n. See upgrade-from-1.0.md for more details.
+	+ Added: Search
+    + Added: A cli client written in Go.
+	+ Fixed: PHP 8.1 stuff
+    + Fixed: API endpoint
+	+ Licence change to GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+
 1.0 Lykos - 2022-11-12
-	- Initial release
+	+ Initial release

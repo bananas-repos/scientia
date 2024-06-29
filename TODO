@@ -1,2 +1,4 @@
-- i18n
-- ignorewords
++ ignorewords
++ PHP better logging
++ PHP Better API
++ Go client improvements
