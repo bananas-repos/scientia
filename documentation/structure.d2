@@ -1,0 +1,69 @@
+sc: scientia
+cfg: config
+cfg_edit: edit
+cfg_init: init
+cfg_read: read
+add: add
+pull: pull
+push: push
+edit: edit
+
+sc -> cfg
+cfg -> cfg_init
+cfg -> cfg_edit
+cfg -> cfg_read
+
+sc -> add
+
+addContainer: add {
+    add_param: file or stdin
+    add_param.shape: oval
+    server: server
+    server.shape: cloud
+    local: local
+    local.shape: page
+
+    add -> add_param
+    add_param -> server
+    server -> local
+    add_param -> local: offline
+}
+
+sc -> pull
+
+pullContainer: pull {
+    server: server
+    server.shape: cloud
+    local: local
+    local.shape: page
+
+    pull -> server
+    server -> local: versions
+}
+
+sc -> push
+
+pushContainer: push {
+    server: server
+    server.shape: cloud
+    local: local
+    local.shape: page
+
+    push -> local
+    local -> server: versions
+}
+
+sc -> edit
+
+editContainer: edit {
+    local: local
+    local.shape: page
+
+    edit_list: list
+    edit_id: id
+
+    edit -> edit_list
+    edit -> edit_id
+
+    edit_id -> local: new version
+}
