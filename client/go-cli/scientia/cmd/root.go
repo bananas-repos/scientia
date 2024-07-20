@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/kirsle/configdir"
+	"github.com/adrg/xdg"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 	"log"
@@ -28,8 +28,8 @@ type ConfigStruct struct {
 // The ScientiaConfig used globally
 var ScientiaConfig ConfigStruct
 
-var ScientiaConfigPath = configdir.LocalConfig("scientia")
-var ScientiaConfigFile = ScientiaConfigPath + "/.scientia.yaml"
+var ScientiaConfigPath = xdg.ConfigHome + "/scientia"
+var ScientiaConfigFile = ScientiaConfigPath + "/scientia.yaml"
 
 // The rootCmd
 var rootCmd = &cobra.Command{

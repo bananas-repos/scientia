@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/kirsle/configdir"
 	"github.com/spf13/cobra"
 	"os"
 	Helper "scientia/lib"
@@ -43,12 +42,14 @@ var configInitCmd = &cobra.Command {
 
 // initConfig which creates the default config file
 func initConfig() {
-	err := configdir.MakePath(ScientiaConfigPath) // Ensure it exists.
-	Helper.ErrorCheck(err, "No $HOME/.config/scientia directory available?")
+	if _, err := os.Stat(ScientiaConfigPath); os.IsNotExist(err) {
+		err := os.MkdirAll(ScientiaConfigPath, os.ModePerm);
+		Helper.ErrorCheck(err, "No $HOME/.config/scientia directory available?")
+	}
 
 	if FlagDebug {
 		fmt.Printf("DEBUG Local user config path: %s\n", ScientiaConfigPath)
-		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigPath)
+		fmt.Printf("DEBUG Local user config file: %s\n", ScientiaConfigFile)
 	}
 
 	if _, err := os.Stat(ScientiaConfigFile); errors.Is(err, os.ErrNotExist) {
