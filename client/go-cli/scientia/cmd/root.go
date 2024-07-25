@@ -20,7 +20,8 @@ var FlagDebug bool
 // ConfigStruct file struct
 type ConfigStruct struct {
 	Endpoint struct {
-		Url   string `yaml:"url"`
+		Add   string `yaml:"add"`
+		Get   string `yaml:"get"`
 		Secret string `yaml:"secret"`
 	} `yaml:"endpoint"`
 }
@@ -82,12 +83,13 @@ func loadConfig() {
 	err = decoder.Decode(&ScientiaConfig)
 	Helper.ErrorCheck(err, "Can not decode config file")
 
-	if ScientiaConfig.Endpoint.Url == "" || ScientiaConfig.Endpoint.Secret == "" {
+	if ScientiaConfig.Endpoint.Add == "" || ScientiaConfig.Endpoint.Secret == "" {
 		log.Fatal("Empty config?")
 	}
 
 	if FlagDebug {
-		fmt.Println("DEBUG Endpoint: " + ScientiaConfig.Endpoint.Url)
+		fmt.Println("DEBUG Add endpoint: " + ScientiaConfig.Endpoint.Add)
+		fmt.Println("DEBUG Get endpoint: " + ScientiaConfig.Endpoint.Get)
 		fmt.Println("DEBUG Secret: " + ScientiaConfig.Endpoint.Secret)
 	}
 }

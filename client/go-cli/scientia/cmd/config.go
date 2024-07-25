@@ -5,6 +5,22 @@ import (
 	"os"
 )
 
+/**
+ * scientia
+ *
+ * Copyright 2023 - 2024 Johannes Keßler
+ *
+ * https://www.bananas-playground.net/projekt/scientia/
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE
+ *
+ * You should have received a copy of the
+ * COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+ * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
+ */
+
 var configCmd = &cobra.Command {
 	Use: "config",
 	Short: "Modify config",

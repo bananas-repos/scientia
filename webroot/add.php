@@ -15,6 +15,10 @@
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
+/**
+ * add endpoint. Accepts only POST and valid post body as json
+ */
+
 mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
 ini_set('error_reporting',-1); // E_ALL & E_STRICT
@@ -46,7 +50,6 @@ date_default_timezone_set(TIMEZONE);
 
 # required libs
 require_once('lib/summoner.class.php');
-
 
 if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER,true));
 ## check if request is valid

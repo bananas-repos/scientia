@@ -24,6 +24,8 @@ import (
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
+// Subcommand of config
+// to init the config with default values.
 
 func init() {
 	configCmd.AddCommand(configInitCmd)
@@ -65,7 +67,8 @@ func initConfig() {
 		fmt.Fprintf(newConfig, "# See %s for more details.\n", Helper.Website)
 		fmt.Fprintf(newConfig, "# Version: %s\n", Helper.Version)
 		fmt.Fprintf(newConfig, "endpoint:\n")
-		fmt.Fprintf(newConfig, "  url: \"http://your-scientia-endpoi.nt/api.php\"\n")
+		fmt.Fprintf(newConfig, "  add: \"http://your-scientia-endpoi.nt/add.php\"\n")
+		fmt.Fprintf(newConfig, "  get: \"http://your-scientia-endpoi.nt/get.php\"\n")
 		fmt.Fprintf(newConfig, "  secret: \"%s\"\n", Helper.RandStringBytes(50))
 
 		fmt.Println("Created a new default config file. Please use the edit command to update it with your settings.")

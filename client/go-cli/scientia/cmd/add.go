@@ -12,13 +12,30 @@ import (
 	Helper "scientia/lib"
 )
 
+
+/**
+ * scientia
+ *
+ * Copyright 2023 - 2024 Johannes Keßler
+ *
+ * https://www.bananas-playground.net/projekt/scientia/
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE
+ *
+ * You should have received a copy of the
+ * COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+ * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
+ */
+
 func init() {
 	rootCmd.AddCommand(addCmd)
 }
 
 var addCmd = &cobra.Command {
 	Use: "add file.ext",
-	Short: "Add a new entry and return the URL",
+	Short: "Add a new entry and get the URL returned",
 	Long: "Add a new entry based on a file or piped cat file | scientia add. Returns the url to the new entry.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// check if there is a file or piped content

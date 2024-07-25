@@ -25,12 +25,12 @@ import (
  * along with this program.  If not, see http://www.sun.com/cddl/cddl.html
  */
 
+// Subcommand of config
+// to read the config file
+
 func init() {
 	configCmd.AddCommand(configReadCmd)
 }
-
-// Subcommand of config
-// to read the config file
 
 var configReadCmd = &cobra.Command {
 	Use:   "read",
