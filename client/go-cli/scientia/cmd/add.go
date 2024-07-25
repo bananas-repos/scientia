@@ -97,7 +97,7 @@ func upload(payload string) Response {
 	jsonData, err := json.Marshal(payloadStruct)
 	Helper.ErrorCheck(err, "Can not create json payload")
 
-	req, err := http.NewRequest(http.MethodPost, ScientiaConfig.Endpoint.Url, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPost, ScientiaConfig.Endpoint.Add, bytes.NewBuffer(jsonData))
 	Helper.ErrorCheck(err, "Can not create http request")
 	// We need to set the content type from the writer, it includes necessary boundary as well
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")

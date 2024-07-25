@@ -83,8 +83,8 @@ func loadConfig() {
 	err = decoder.Decode(&ScientiaConfig)
 	Helper.ErrorCheck(err, "Can not decode config file")
 
-	if ScientiaConfig.Endpoint.Add == "" || ScientiaConfig.Endpoint.Secret == "" {
-		log.Fatal("Empty config?")
+	if ScientiaConfig.Endpoint.Add == "" || ScientiaConfig.Endpoint.Get == "" || ScientiaConfig.Endpoint.Secret == "" {
+		log.Fatal("Empty or outdated config?")
 	}
 
 	if FlagDebug {
