@@ -101,6 +101,35 @@ class Entry {
     }
 
     /**
+     * Load an entry by given $id.
+     * Used by get api
+     *
+     * @param string $id Id of the entry
+     * @return array
+     */
+    public function loadById(string $id): array {
+        $ret = array();
+
+        if(!empty($id)) {
+            $queryStr = "SELECT `ident`,`date`,`body`
+                            FROM `".DB_PREFIX."_entry`
+                            WHERE `ident` = '".$this->_DB->real_escape_string($id)."'";
+            if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+            try {
+                $query = $this->_DB->query($queryStr);
+                if($query !== false && $query->num_rows > 0) {
+                    $ret = $query->fetch_assoc();
+                }
+            }
+            catch(Exception $e) {
+                error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * Update an entry by given $id and $data
      *
      * @param string $data
@@ -149,6 +178,42 @@ class Entry {
             catch(Exception $e) {
                 error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
             }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Get all entries which match the specified options
+     * Body is trimmed to the first 100 chars
+     *
+     * @param String $searchTerm
+     * @param String $intervalStart
+     * @param String $intervalEnd
+     * @param int $limit
+     * @return array
+     */
+    public function list(string $searchTerm='', string $intervalStart='', string $intervalEnd='', int $limit=100): array {
+        $ret = array();
+
+        $queryStr = "SELECT e.ident, e.date, SUBSTRING(e.body,1,100) AS body 
+                    FROM `".DB_PREFIX."_entry` AS e";
+        if(!empty($intervalStart) && !empty($intervalEnd)) {
+            $queryStr .= " WHERE e.date >= '".$intervalStart."' AND e.date <= '".$intervalEnd."'";
+        }
+        if(!empty($searchTerm)) {
+            $queryStr .= " AND MATCH(e.words) AGAINST('".$this->_DB->real_escape_string($searchTerm)."' IN BOOLEAN MODE)";
+        }
+        $queryStr .= " ORDER BY `created` DESC";
+        $queryStr .= " LIMIT $limit";
+
+        if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+        try {
+            $query = $this->_DB->query($queryStr);
+            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        }
+        catch(Exception $e) {
+            error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
         }
 
         return $ret;

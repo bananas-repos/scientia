@@ -6,7 +6,6 @@ import (
 	"github.com/adrg/xdg"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
-	"log"
 	"os"
 	Helper "scientia/lib"
 )
@@ -24,6 +23,19 @@ type ConfigStruct struct {
 		Get   string `yaml:"get"`
 		Secret string `yaml:"secret"`
 	} `yaml:"endpoint"`
+}
+
+// GetResponse struct for the get.php request
+type GetResponse struct {
+	Data []GetResponseEntry `json:"data"`
+	Status int `json:"status"`
+	Message string `json:"message"`
+}
+// GetResponseEntry struct is the entry itself
+type GetResponseEntry struct {
+	Ident string `json:"ident"`
+	Date string `json:"date"`
+	Body string `json:"body"`
 }
 
 // The ScientiaConfig used globally
@@ -84,7 +96,7 @@ func loadConfig() {
 	Helper.ErrorCheck(err, "Can not decode config file")
 
 	if ScientiaConfig.Endpoint.Add == "" || ScientiaConfig.Endpoint.Get == "" || ScientiaConfig.Endpoint.Secret == "" {
-		log.Fatal("Empty or outdated config?")
+		fmt.Println("WARNING Empty or outdated config?")
 	}
 
 	if FlagDebug {

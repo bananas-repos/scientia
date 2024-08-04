@@ -17,8 +17,8 @@
 
 $TemplateData['entries'] = array();
 
-$queryStr = "SELECT e.ident, e.date, e.words, SUBSTRING(e.body,1,100) AS body FROM `".DB_PREFIX."_entry` AS e";
-$queryLimit = " LIMIT 100";
+require_once 'lib/entry.class.php';
+$Entry = new Entry($DB);
 
 $searchTerm = '';
 if(isset($_POST['submitForm']) && isset($_POST['searchInput'])) {
@@ -32,10 +32,9 @@ if(isset($_POST['submitForm']) && isset($_POST['searchInput'])) {
 // the single date infos come from index.php
 $_groupByFormat = $_year;
 $breadcrumb = array('Y');
+$_intervalStart = '';
+$_intervalEnd = '';
 if(!empty($_requestDateProvided)) {
-    $_intervalStart = '';
-    $_intervalEnd = '';
-
     if($_requestDateProvided === 'Y-m-d') {
         $queryLimit = "";
         $_groupByFormat = $_year.'-'.$_month.'-'.$_day;
@@ -56,39 +55,18 @@ if(!empty($_requestDateProvided)) {
         $_intervalStart = $_groupByFormat.'-01-01';
         $_intervalEnd = $_groupByFormat.'-12-31';
     }
-
-    if(!empty($_intervalStart) && !empty($_intervalEnd)) {
-        $queryStr .= " WHERE e.date >= '".$_intervalStart."' AND e.date <= '".$_intervalEnd."'";
-        if(!empty($searchTerm)) {
-            $queryStr .= " AND MATCH(e.words) AGAINST('".$DB->real_escape_string($searchTerm)."' IN BOOLEAN MODE)";
-        }
-    }
 } else {
     $_requestDateProvided = 'Y';
-    if(!empty($searchTerm)) {
-        $queryStr .= " WHERE MATCH(e.words) AGAINST('".$DB->real_escape_string($searchTerm)."' IN BOOLEAN MODE)";
-    }
 }
 
-$queryStr .= " ORDER BY `created` DESC";
-$queryStr .= $queryLimit;
-if(QUERY_DEBUG) error_log("[QUERY] query: ".var_export($queryStr,true));
-
-try {
-    $query = $DB->query($queryStr);
-    if($query !== false && $query->num_rows > 0) {
-        while(($result = $query->fetch_assoc()) != false) {
-            $_d = new DateTime($result['date']);
-            $_breadcrumb = array();
-            foreach($breadcrumb as $_b) {
-                $_breadcrumb[] = $_d->format($_b);
-            }
-            $TemplateData['entries'][$_d->format($_requestDateProvided)]['breadcrumb'] = $_breadcrumb;
-            $TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$result['ident']] = $result;
-            $TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$result['ident']]['link'] = str_replace('-','/',$result['date']).'/'.$result['ident'];
-        }
+$entries = $Entry->list($searchTerm, $_intervalStart, $_intervalEnd);
+foreach($entries as $k=>$entry) {
+    $_d = new DateTime($entry['date']);
+    $_breadcrumb = array();
+    foreach($breadcrumb as $_b) {
+        $_breadcrumb[] = $_d->format($_b);
     }
-}
-catch(Exception $e) {
-    error_log("[ERROR] catch: ".$e->getMessage());
+    $TemplateData['entries'][$_d->format($_requestDateProvided)]['breadcrumb'] = $_breadcrumb;
+    $TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$entry['ident']] = $entry;
+    $TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$entry['ident']]['link'] = str_replace('-','/',$entry['date']).'/'.$entry['ident'];
 }
