@@ -16,7 +16,7 @@ import (
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -129,7 +129,8 @@ func upload(payload string) Response {
 	if response.StatusCode != 200 {
 		returnResponse = Response {
 			Message: "Invalid response status. Use --debug for more information.",
-			Status: response.StatusCode }
+			Status: response.StatusCode,
+		}
 	} else {
 		err := json.Unmarshal([]byte(responseBody), &returnResponse)
 		Helper.ErrorCheck(err, "Can not parse return json")
