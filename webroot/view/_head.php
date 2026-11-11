@@ -7,5 +7,6 @@
             max-width: 90%;
         }
     </style>
+	<title><?php echo $TemplateData['title'] ?? ''; ?> scientia</title>
 </head>
 <body>

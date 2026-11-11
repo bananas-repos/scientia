@@ -2,6 +2,8 @@
     + Config change. Important breaking changes. See upgrade-from-1.1.md for more details.
     + Updated: README.md
     + Updated: upgrade-from-1.0.md file for better reading
+    + Fixed: Search. Works now everywhere.
+    + Added: Simple page title to see where it is at.
 
 1.1 Atlas - 2024-06-29
     + Config change: i18n. See upgrade-from-1.0.md for more details.

@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -27,6 +27,7 @@ $TemplateData['data'] = array();
 if(!empty($_id)) {
     $TemplateData['data'] = $Entry->load($_year,$_month,$_day,$_id);
     $TemplateData['data']['breadcrumb'] = array($_year,$_month,$_day);
+    $TemplateData['title'] = implode(" | ",array($_year,$_month,$_day));
 }
 
 if(isset($_POST['submitForm']) && isset($_POST['fdata'])) {

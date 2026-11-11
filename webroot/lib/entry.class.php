@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -202,13 +202,20 @@ class Entry {
         $ret = array();
 
         $queryStr = "SELECT e.ident, e.date, SUBSTRING(e.body,1,100) AS body 
-                    FROM `".DB_PREFIX."_entry` AS e";
-        if(!empty($intervalStart) && !empty($intervalEnd)) {
-            $queryStr .= " WHERE e.date >= '".$intervalStart."' AND e.date <= '".$intervalEnd."'";
+                    FROM `".DB_PREFIX."_entry` AS e ";
+        $queryWhere = array();
+        if(!empty($intervalStart) || !empty($intervalEnd) || !empty($searchTerm)) {
+            if(!empty($intervalStart) && !empty($intervalEnd)) {
+                $queryWhere[] = "(e.date BETWEEN '".$intervalStart."' AND '".$intervalEnd."')";
+            }
+            if(!empty($searchTerm)) {
+                $queryWhere[] = "MATCH(e.words) AGAINST('".$this->_DB->real_escape_string($searchTerm)."' IN NATURAL LANGUAGE MODE)";
+            }
         }
-        if(!empty($searchTerm)) {
-            $queryStr .= " AND MATCH(e.words) AGAINST('".$this->_DB->real_escape_string($searchTerm)."' IN BOOLEAN MODE)";
+        if(!empty($queryWhere)) {
+            $queryStr .= "WHERE ".implode(" AND ",$queryWhere);
         }
+
         $queryStr .= " ORDER BY `created` DESC";
         $queryStr .= " LIMIT $limit";
 

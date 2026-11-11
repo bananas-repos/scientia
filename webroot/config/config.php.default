@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -21,9 +21,9 @@
  */
 
 # set to true if you need debug messages in error log file
-const DEBUG = true;
+const DEBUG = false;
 # set to ture if you need query log messages in error log file.
-const QUERY_DEBUG = true;
+const QUERY_DEBUG = false;
 
 # timezone settings
 const TIMEZONE = 'Europe/Berlin';

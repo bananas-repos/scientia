@@ -13,7 +13,7 @@ Searchable with mysql fulltext search. Protected by BASIC AUTH, single user only
 Install it and access it with a browser.
 
 After login you can browse and search every note. They are sorted by date and grouped by year. Selecting a year
-does limit the view to this year only. After selecting an entry you are able to filter by day and month by using the `breadcrumb`.
+does limit the view to this year only. After selecting an entry you are able to filter by day and month by using the `Breadcrumb`.
 
 Adding, with the action `New`,  does create it with the current date and creates a uniq url.
 

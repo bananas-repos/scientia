@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -39,6 +39,7 @@ $_groupByFormat = $_year;
 $breadcrumb = array('Y');
 $_intervalStart = '';
 $_intervalEnd = '';
+$_hasTitle = false;
 if(!empty($_requestDateProvided)) {
     if($_requestDateProvided === 'Y-m-d') {
         $queryLimit = "";
@@ -60,6 +61,7 @@ if(!empty($_requestDateProvided)) {
         $_intervalStart = $_groupByFormat.'-01-01';
         $_intervalEnd = $_groupByFormat.'-12-31';
     }
+    $_hasTitle = true;
 } else {
     $_requestDateProvided = 'Y';
 }
@@ -74,4 +76,5 @@ foreach($entries as $k=>$entry) {
     $TemplateData['entries'][$_d->format($_requestDateProvided)]['breadcrumb'] = $_breadcrumb;
     $TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$entry['ident']] = $entry;
     $TemplateData['entries'][$_d->format($_requestDateProvided)]['e'][$entry['ident']]['link'] = str_replace('-','/',$entry['date']).'/'.$entry['ident'];
+    if($_hasTitle) $TemplateData['title'] = implode(" | ", $_breadcrumb);
 }
