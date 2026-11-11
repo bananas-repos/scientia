@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -127,35 +127,6 @@ class Summoner {
     }
 
     /**
-     * check if a string starts with a given string
-     *
-     * @param string $haystack
-     * @param string $needle
-     * @return boolean
-     */
-    static function startsWith(string $haystack, string $needle): bool {
-        $length = strlen($needle);
-        return (substr($haystack, 0, $length) === $needle);
-    }
-
-    /**
-     * check if a string ends with a given string
-     *
-     * @param string $haystack
-     * @param string $needle
-     * @return boolean
-     */
-    static function endsWith(string $haystack, string $needle): bool {
-        $length = strlen($needle);
-        if ($length == 0) {
-            return true;
-        }
-
-        return (substr($haystack, -$length) === $needle);
-    }
-
-
-    /**
      * create a short string based on a integer
      *
      * @see https://www.jwz.org/base64-shortlinks/
@@ -205,5 +176,27 @@ class Summoner {
             echo 'No Access.';
             exit;
         }
+    }
+
+    /**
+     * Make the input more safe for logging
+     *
+     * @param mixed $input The string to be made more safe
+     * @return string
+     */
+    static function cleanForLog(mixed $input): string {
+        $input = var_export($input, true);
+        $input = preg_replace( "/[\t\n\r]/", " ", $input);
+        return addcslashes($input, "\000..\037\177..\377\\");
+    }
+
+    /**
+     * error_log with a dedicated destination
+     * Uses LOGFILE const
+     *
+     * @param string $msg The string to be written to the log
+     */
+    static function sysLog(string $msg): void {
+        error_log(date("c")." ".self::cleanForLog($_SERVER['REMOTE_ADDR']??'-')." ".self::cleanForLog($_SERVER['HTTP_USER_AGENT']??'-')." ".$msg."\n", 3, LOGFILE);
     }
 }

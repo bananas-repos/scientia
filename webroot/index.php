@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -38,7 +38,6 @@ require_once('config/config.php');
 
 ## set the error reporting
 ini_set('log_errors',true);
-ini_set('error_log',PATH_SYSTEMOUT.'/error.log');
 if(DEBUG === true) {
     ini_set('display_errors',true);
 }
@@ -62,7 +61,7 @@ $i18n = new I18n();
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
-$DB->query("SET collation_connection = 'utf8mb4_bin'");
+$DB->query("SET collation_connection = 'utf8mb4_0900_ai_ci'");
 $driver = new mysqli_driver();
 $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
 

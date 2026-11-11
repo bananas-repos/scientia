@@ -1,7 +1,6 @@
 + search
 ++ filter by date and if available by category
 + categories with colors
-+ PHP better logging
 + PHP Better API
 + Go client improvements
 ++ local storage and sync

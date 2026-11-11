@@ -60,14 +60,14 @@ class Entry {
                         `ident` = '".$this->_DB->real_escape_string($_ident)."',
                         `body` = '".$this->_DB->real_escape_string($data)."',
                         `words` = '".$this->_DB->real_escape_string($_words)."'";
-        if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $this->_DB->query($queryStr);
             $ret = $_ident;
         }
         catch(Exception $e) {
-            error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+            Summoner::sysLog("[ERROR] ".__METHOD__." catch: ".Summoner::cleanForLog($e->getMessage()));
         }
 
         return $ret;
@@ -90,7 +90,7 @@ class Entry {
                             FROM `".DB_PREFIX."_entry`
                             WHERE `ident` = '".$this->_DB->real_escape_string($id)."'
                                 AND `date` = '".$this->_DB->real_escape_string($y.'-'.$m.'-'.$d)."'";
-            if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
             try {
                 $query = $this->_DB->query($queryStr);
                 if($query !== false && $query->num_rows > 0) {
@@ -98,7 +98,7 @@ class Entry {
                 }
             }
             catch(Exception $e) {
-                error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+                Summoner::sysLog("[ERROR] ".__METHOD__." catch: ".Summoner::cleanForLog($e->getMessage()));
             }
         }
 
@@ -119,7 +119,7 @@ class Entry {
             $queryStr = "SELECT `ident`,`date`,`body`
                             FROM `".DB_PREFIX."_entry`
                             WHERE `ident` = '".$this->_DB->real_escape_string($id)."'";
-            if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
             try {
                 $query = $this->_DB->query($queryStr);
                 if($query !== false && $query->num_rows > 0) {
@@ -127,7 +127,7 @@ class Entry {
                 }
             }
             catch(Exception $e) {
-                error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+                Summoner::sysLog("[ERROR] ".__METHOD__." catch: ".Summoner::cleanForLog($e->getMessage()));
             }
         }
 
@@ -150,13 +150,13 @@ class Entry {
                             `body` = '".$this->_DB->real_escape_string($data)."',
                             `words` = '".$this->_DB->real_escape_string($_words)."'
                             WHERE `ident` = '".$this->_DB->real_escape_string($id)."'";
-            if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
             try {
                 $this->_DB->query($queryStr);
                 $ret = $id;
             }
             catch(Exception $e) {
-                error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+                Summoner::sysLog("[ERROR] ".__METHOD__." catch: ".Summoner::cleanForLog($e->getMessage()));
             }
         }
 
@@ -175,13 +175,13 @@ class Entry {
         if(!empty($id)) {
             $queryStr = "DELETE FROM `".DB_PREFIX."_entry`
                             WHERE `ident` = '".$this->_DB->real_escape_string($id)."'";
-            if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
             try {
                 $this->_DB->query($queryStr);
                 $ret = true;
             }
             catch(Exception $e) {
-                error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+                Summoner::sysLog("[ERROR] ".__METHOD__." catch: ".Summoner::cleanForLog($e->getMessage()));
             }
         }
 
@@ -212,13 +212,13 @@ class Entry {
         $queryStr .= " ORDER BY `created` DESC";
         $queryStr .= " LIMIT $limit";
 
-        if(QUERY_DEBUG) error_log("[QUERY] ".__METHOD__." query: ".var_export($queryStr,true));
+        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
         try {
             $query = $this->_DB->query($queryStr);
             $ret = $query->fetch_all(MYSQLI_ASSOC);
         }
         catch(Exception $e) {
-            error_log("[ERROR] ".__METHOD__." catch: ".$e->getMessage());
+            Summoner::sysLog("[ERROR] ".__METHOD__." catch: ".Summoner::cleanForLog($e->getMessage()));
         }
 
         return $ret;
@@ -229,7 +229,6 @@ class Entry {
      *
      * @param $data string
      * @return array
-     * @todo ignores
      *
      */
     private function _words(string $data): array {

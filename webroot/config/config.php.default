@@ -33,8 +33,9 @@ const FRONTEND_LANGUAGE = 'en';
 
 # path settings
 const PATH_ABSOLUTE = '/path/to/scientia/webroot';
-const PATH_SYSTEMOUT = PATH_ABSOLUTE . '/systemout';
+const PATH_LOG = PATH_ABSOLUTE . '/log';
 const PATH_WEBROOT = '/code/scientia/webroot';
+const LOGFILE = PATH_LOG.'/scientia.log';
 
 # Installation Domain. Webrootpath will be added automatically
 const INSTALL_URL = 'http://www.example.tld';

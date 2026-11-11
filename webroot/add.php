@@ -2,7 +2,7 @@
 /**
  * scientia
  *
- * Copyright 2023 - 2024 Johannes Keßler
+ * Copyright 2023 - 2026 Johannes Keßler
  *
  * https://www.bananas-playground.net/projekt/scientia/
  *
@@ -42,7 +42,6 @@ require_once('config/config.php');
 
 ## set the error reporting
 ini_set('log_errors',true);
-ini_set('error_log',PATH_SYSTEMOUT.'/error.log');
 if(DEBUG === true) {
     ini_set('display_errors',true);
 }
@@ -56,22 +55,22 @@ date_default_timezone_set(TIMEZONE);
 # required libs
 require_once('lib/summoner.class.php');
 
-if(DEBUG) error_log("Dump SERVER ".var_export($_SERVER,true));
+if(DEBUG) Summoner::sysLog("[DEBUG] Dump SERVER ".Summoner::cleanForLog($_SERVER));
 ## check if request is valid
 $_create = false;
 $filteredData = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] === 'application/json; charset=UTF-8') {
     $payload = json_decode(file_get_contents('php://input'), true);
-    if(DEBUG) error_log("[DEBUG] Dump payload ".var_export($payload,true));
+    if(DEBUG) Summoner::sysLog("[DEBUG] Dump payload ".Summoner::sysLog($payload));
     if(!empty($payload)) {
         if(isset($payload['asl']) && !empty($payload['asl'])
             && isset($payload['data']) && !empty($payload['data'])
             && isset(UPLOAD_SECRET[$payload['asl']])
         ) {
-            if(DEBUG) error_log("[DEBUG] Valid payload so far");
+            if(DEBUG) Summoner::sysLog("[DEBUG] Valid payload so far");
             $filteredData = filter_var($payload['data'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             if(!empty($filteredData)) {
-                if(DEBUG) error_log("[DEBUG] Validated payload");
+                if(DEBUG) Summoner::sysLog("[DEBUG] Validated payload");
                 $_create = true;
             }
         }
@@ -99,7 +98,7 @@ if($_create === false) {
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
-$DB->query("SET collation_connection = 'utf8mb4_bin'");
+$DB->query("SET collation_connection = 'utf8mb4_0900_ai_ci'");
 $driver = new mysqli_driver();
 $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
 
@@ -107,12 +106,12 @@ require_once 'lib/entry.class.php';
 $Entry = new Entry($DB);
 $do = $Entry->create($filteredData);
 if(!empty($do)) {
-    $contentBody['message'] = INSTALL_URL . PATH_WEBROOT . date('/Y/m/d/').$do;
+    $contentBody['message'] = INSTALL_URL.PATH_WEBROOT.date('/Y/m/d/').$do;
 }
 else {
-    $hash = md5($do.time());
-    error_log("[ERROR] $hash Can not create. ". var_export($do,true));
-    $contentBody['message'] = "Something went wrong. $hash";
+    if(DEBUG) Summoner::sysLog("[DEBUG] Can not create new entry ".Summoner::cleanForLog($filteredData));
+    Summoner::sysLog("[ERROR] Can not create new entry.");
+    $contentBody['message'] = "Something went wrong.";
     $contentBody['status'] = 500;
 }
 
