@@ -5,10 +5,21 @@
 
 https://www.bananas-playground.net/projekt/scientia/
 
-A self hosted small knowledge base. Simple storage of text into the database. Browsable by date.  
+A self hosted small note collection application. Simple storage of text into the database. Browsable by date.  
 Searchable with mysql fulltext search. Protected by BASIC AUTH, single user only, so far.
 
 # Usage
+
+Install it and access it with a browser.
+
+After login you can browse and search every note. They are sorted by date and grouped by year. Selecting a year
+does limit the view to this year only. After selecting an entry you are able to filter by day and month by using the `breadcrumb`.
+
+Adding, with the action `New`,  does create it with the current date and creates a uniq url.
+
+Editing by selecting a note and saving the changes. It updates the search database and the updated timestamp.
+
+To delete an entry you have to select it and check the `Delete entry` option. Click `Save` and the entry is gone.
 
 # Requirements
 
