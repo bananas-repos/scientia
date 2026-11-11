@@ -1,5 +1,6 @@
++ search
+++ filter by date and if available by category
 + categories with colors
-+ ignorewords
 + PHP better logging
 + PHP Better API
 + Go client improvements
