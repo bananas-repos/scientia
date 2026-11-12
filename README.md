@@ -21,8 +21,14 @@ Editing by selecting a note and saving the changes. It updates the search databa
 
 To delete an entry you have to select it and check the `Delete entry` option. Click `Save` and the entry is gone.
 
+# Search
+
 The search is a mysql fulltext search. It builds an index by using the words provided in the entries. Everything longer then 3 chars is added
 to the index. MySQL has its own [ignore/stop words](https://dev.mysql.com/doc/refman/26.10/en/fulltext-stopwords.html) build in.
+
+Using the search at the startpage, the results come frome everthing. Limiting the result to a maximum of 100.
+
+Searching withing a year or month, the results are limited to this timeframe.
 
 # Requirements
 

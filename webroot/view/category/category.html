@@ -1,0 +1,44 @@
+<p>
+	<a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a>
+	| <a href="<?php echo PATH_WEBROOT; ?>/category"><?php echo $i18n->t('text.category'); ?></a>
+	| <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a>
+</p>
+
+<form method="post">
+	<table>
+		<thead>
+			<tr>
+				<th><?php echo $i18n->t('form.cat.name'); ?></th>
+				<th><?php echo $i18n->t('form.cat.new.name'); ?></th>
+				<th><?php echo $i18n->t('form.cat.deletion'); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<?php echo $i18n->t('form.cat.new'); ?>
+				</td>
+				<td>
+					<input type="text" name="category[]" />
+				</td>
+				<td>
+					<input type="checkbox" name="deletecategory" value="delete" />
+					<small style="color: indianred"><?php echo $i18n->t('form.checkbox.deleteentry'); ?></small>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href=""></a>
+				</td>
+				<td>
+					<input type="text" name="category[]" />
+				</td>
+				<td>
+					<input type="checkbox" name="deletecategory" value="delete" />
+					<small style="color: indianred"><?php echo $i18n->t('form.checkbox.deleteentry'); ?></small>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" name="updateCategories" value="<?php echo $i18n->t('form.button.save'); ?>">
+</form>

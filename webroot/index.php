@@ -66,7 +66,6 @@ $driver = new mysqli_driver();
 $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
 
 # default values
-$_view = 'list';
 $_year = date('Y');
 $_month = date('m');
 $_day = date('d');
@@ -74,6 +73,20 @@ $_id = '';
 $_requestDateProvided = '';
 $TemplateData = array();
 
+# valid pages
+$_validPages = array('list','entry','category');
+
+$_view = 'list';
+if(!empty($_GET['p'])) {
+    $_view = trim($_GET['p']);
+    $_view = Summoner::validate($_view,'nospace') ? $_view : 'list';
+
+    if(!in_array($_view,$_validPages)) {
+        $_view = "404";
+    }
+}
+
+## the following $_ are used in edit and list
 if(isset($_GET['y']) && Summoner::validate($_GET['y'], 'digit')) {
     $_year = trim($_GET['y']);
     $_requestDateProvided .= 'Y';
@@ -85,13 +98,6 @@ if(isset($_GET['m']) && Summoner::validate($_GET['m'], 'digit')) {
 if(isset($_GET['d']) && Summoner::validate($_GET['d'], 'digit')) {
     $_day = trim($_GET['d']);
     $_requestDateProvided .= '-d';
-}
-if(isset($_GET['p']) && Summoner::validate($_GET['p'], 'nospace') && $_GET['p'] == "new") {
-    $_view = 'entry';
-}
-if(isset($_GET['id']) && Summoner::validate($_GET['id'], 'shortlink',4)) {
-    $_id = trim($_GET['id']);
-    $_view = 'entry';
 }
 
 require_once 'view/'.$_view.'/'.$_view.'.php';

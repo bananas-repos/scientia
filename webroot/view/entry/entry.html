@@ -1,4 +1,6 @@
-<p><a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a> | <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a></p>
+<p><a href="<?php echo PATH_WEBROOT; ?>/"><?php echo $i18n->t('text.home'); ?></a>
+	| <a href="<?php echo PATH_WEBROOT; ?>/new"><?php echo $i18n->t('text.new'); ?></a>
+</p>
 <p>
 <?php if(!empty($TemplateData['data'])) {
     $_link = '';
@@ -20,5 +22,9 @@
 <form method="post">
     <textarea rows="25" placeholder="write here" name="fdata[entry]"><?php echo $TemplateData['data']['body'] ?? ''; ?></textarea>
     <input type="submit" name="submitForm" value="<?php echo $i18n->t('form.button.save'); ?>">
+    <select name="category" id="cat-select">
+        <option value="">Category</option>
+        <hr />
+    </select>
     <input type="checkbox" name="deleteEntry" value="yes" /> <small style="color: indianred"><?php echo $i18n->t('form.checkbox.deleteentry'); ?></small>
 </form>

@@ -6,8 +6,9 @@
 	RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
-	RewriteRule  ^(\d{4})/(\d{2})/(\d{2})(|/(\S{4}))$ index.php?y=$1&m=$2&d=$3&id=$5 [L]
+	RewriteRule  ^(\d{4})/(\d{2})/(\d{2})(|/(\S{4}))$ index.php?p=entry&y=$1&m=$2&d=$3&id=$5 [L]
 	RewriteRule  ^(\d{4})/(\d{2})$ index.php?y=$1&m=$2 [L]
 	RewriteRule  ^(\d{4})$ index.php?y=$1 [L]
-	RewriteRule  ^new$ index.php?p=new [L]
+	RewriteRule  ^new$ index.php?p=entry [L]
+	RewriteRule  ^category$ index.php?p=category [L]
 </IfModule>

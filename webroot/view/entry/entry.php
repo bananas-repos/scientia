@@ -23,6 +23,10 @@
 require_once 'lib/entry.class.php';
 $Entry = new Entry($DB);
 
+if(isset($_GET['id']) && Summoner::validate($_GET['id'], 'shortlink',4)) {
+    $_id = trim($_GET['id']);
+}
+
 $TemplateData['data'] = array();
 if(!empty($_id)) {
     $TemplateData['data'] = $Entry->load($_year,$_month,$_day,$_id);
